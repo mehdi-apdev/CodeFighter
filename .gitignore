@@ -1,0 +1,33 @@
+# Fichiers de build (générique)
+build/
+bin/
+obj/
+
+# Fichiers de build CMake (très courants)
+cmake-build*/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Fichiers CLion
+.idea/
+
+# Fichiers Code::Blocks
+*.cbp
+*.depend
+*.layout
+*.workspace
+
+# Fichiers macOS
+.DS_Store
+*.swp
+*.swo
+
+# Binaires et bibliothèques
+*.exe
+*.dll
+*.a
+*.so
+*.dylib
+*.app/

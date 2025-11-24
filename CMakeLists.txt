@@ -7,31 +7,34 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # --- SPÉCIFIQUE MACOS (Apple Silicon & Intel) ---
 if (APPLE)
-    # Aide CMake à trouver Homebrew
-    list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml")
-    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/sfml")
+    # On force CMake à chercher la version 2 spécifique installée par Brew
+    # (Tes collègues sous Windows n'utiliseront pas ce bloc, donc pas de conflit)
+    list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml@2")
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/sfml@2")
 endif()
 
-# --- RECHERCHE DES DÉPENDANCES (SFML 3) ---
-# Note : On cherche la version 3. Si tes collègues sont sous Windows,
-# ils devront installer SFML 3.x aussi (pas la 2.5/2.6).
-find_package(SFML 3 COMPONENTS Graphics Audio Window System REQUIRED)
+# --- RECHERCHE DES DÉPENDANCES (SFML 2.6) ---
+# On demande explicitement la version 2
+find_package(SFML 2.6 COMPONENTS graphics audio window system REQUIRED)
 
-# --- DÉFINITION DE L'EXÉCUTABLE ---
+# --- EXÉCUTABLE ---
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-# --- LINKING ---
-# Avec SFML 3, on utilise les "Targets" modernes (SFML::...)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-        SFML::Graphics
-        SFML::Audio
-        SFML::Window
-        SFML::System
+# --- INCLUSION ---
+target_include_directories(${PROJECT_NAME} PUBLIC ${SFML_INCLUDE_DIR})
+
+# --- LINKING (Syntaxe SFML 2.x) ---
+# Note : En version 2, les variables sont ${SFML_LIBRARIES} ou les noms en minuscules
+target_link_libraries(${PROJECT_NAME}
+        sfml-graphics
+        sfml-audio
+        sfml-window
+        sfml-system
 )
 
 # Frameworks macOS requis (seulement sur Mac)
 if (APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
+    target_link_libraries(${PROJECT_NAME}
             "-framework Cocoa"
             "-framework OpenGL"
             "-framework IOKit"

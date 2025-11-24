@@ -1,5 +1,3 @@
-# --- CONFIGURATION GLOBALE DU PROJET ---
-# Pas besoin de politiques étendues, on fait tout à la main.
 cmake_minimum_required(VERSION 3.14)
 
 project(CodeFighter VERSION 1.0)
@@ -7,41 +5,37 @@ project(CodeFighter VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# --- DÉFINITION MANUELLE DES CHEMINS (À ADAPTER SI VOUS BOUGEZ LE DOSSIER) ---
-# Le chemin que vous avez créé
-set(SFML_ROOT_DIR "/Users/melmestari/Developer/SDKs/SFML-2.5.1-macos-clang")
+# --- SPÉCIFIQUE MACOS (Apple Silicon & Intel) ---
+if (APPLE)
+    # Aide CMake à trouver Homebrew
+    list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml")
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/sfml")
+endif()
 
-# Répertoires des en-têtes et des bibliothèques
-set(SFML_INCLUDE_DIR ${SFML_ROOT_DIR}/include)
-set(SFML_LIBRARY_DIR ${SFML_ROOT_DIR}/lib)
+# --- RECHERCHE DES DÉPENDANCES (SFML 3) ---
+# Note : On cherche la version 3. Si tes collègues sont sous Windows,
+# ils devront installer SFML 3.x aussi (pas la 2.5/2.6).
+find_package(SFML 3 COMPONENTS Graphics Audio Window System REQUIRED)
 
-# --- EXÉCUTABLE & LINKING MANUEL ---
+# --- DÉFINITION DE L'EXÉCUTABLE ---
+add_executable(${PROJECT_NAME} src/main.cpp)
 
-# Liste des fichiers source
-add_executable(
-        ${PROJECT_NAME}
-        src/main.cpp
+# --- LINKING ---
+# Avec SFML 3, on utilise les "Targets" modernes (SFML::...)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        SFML::Graphics
+        SFML::Audio
+        SFML::Window
+        SFML::System
 )
 
-# 1. Dire au compilateur où trouver les en-têtes (#include <SFML/...)
-target_include_directories(${PROJECT_NAME} PUBLIC ${SFML_INCLUDE_DIR})
-
-# 2. Dire à l'éditeur de liens où trouver les fichiers .dylib
-target_link_directories(${PROJECT_NAME} PUBLIC ${SFML_LIBRARY_DIR})
-
-# 3. Lier les bibliothèques SFML + les dépendances système macOS (OBLIGATOIRE !)
-target_link_libraries(
-        ${PROJECT_NAME}
-        # Bibliothèques SFML 2.5.1
-        sfml-graphics
-        sfml-window
-        sfml-system
-        sfml-audio
-
-        # Frameworks système requis par SFML sur macOS
-        "-framework Cocoa"
-        "-framework OpenGL"
-        "-framework IOKit"
-        "-framework CoreAudio"
-        "-framework AudioToolbox"
-)
+# Frameworks macOS requis (seulement sur Mac)
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            "-framework Cocoa"
+            "-framework OpenGL"
+            "-framework IOKit"
+            "-framework CoreAudio"
+            "-framework AudioToolbox"
+    )
+endif()

@@ -1,0 +1,49 @@
+=== GUIDE D'INSTALLATION WINDOWS (Code::Blocks + SFML) ===
+
+PRÉREQUIS OBLIGATOIRES :
+1. Git : https://git-scm.com/download/win
+2. CMake (Installer MSI) : https://cmake.org/download/
+3. Code::Blocks (Version avec MinGW) : http://www.codeblocks.org/downloads/binaries
+4. SFML 2.6.1 (Version GCC - MinGW 64-bit) : https://www.sfml-dev.org/download/sfml/2.6.1/
+
+---
+
+ÉTAPE 1 : PRÉPARATION DE LA SFML
+1. Télécharge l'archive SFML 2.X (MinGW 64-bit).
+2. Décompresse-la à la racine de ton disque C: pour avoir un chemin simple.
+   Exemple : C:\SFML-2.5.1
+   (Évite les dossiers "Téléchargements" ou avec des espaces).
+
+ÉTAPE 2 : RÉCUPÉRER LE PROJET
+1. Ouvre un terminal (ou Git Bash).
+2. Clone le projet :
+   git clone https://github.com/mehdi-apdev/CodeFighter
+3. Entre dans le dossier :
+   cd CodeFighter
+
+ÉTAPE 3 : GÉNÉRER LE PROJET AVEC CMAKE
+1. Ouvre "CMake (cmake-gui)".
+2. "Where is the source code" : Choisis le dossier CodeFighter.
+3. "Where to build the binaries" : Ajoute "/build" à la fin du chemin.
+   Exemple : C:/Users/TonNom/CodeFighter/build
+4. Clique sur "Configure".
+   - Une fenêtre s'ouvre : Choisis "CodeBlocks - MinGW Makefiles".
+   - Clique sur "Finish".
+5. 🔴ERREUR ROUGE ? C'est normal ! CMake ne trouve pas SFML.
+   - Dans la liste rouge, cherche la ligne "SFML_DIR".
+   - Clique à droite (Value) et mets le chemin vers le dossier cmake de SFML :
+     C:\SFML-2.5.1\lib\cmake\SFML
+   - Clique sur "Configure" à nouveau. Tout doit devenir blanc.
+6. Clique sur "Generate".
+
+ÉTAPE 4 : COMPILER ET LANCER
+1. Va dans le dossier "CodeFighter/build".
+2. Ouvre le fichier "CodeFighter.cbp" (Code::Blocks Project).
+3. Dans Code::Blocks : Appuie sur F9 (Build & Run).
+
+ÉTAPE 5 : L'ERREUR CLASSIQUE (DLL MANQUANTES)
+Si une fenêtre d'erreur dit "sfml-graphics-2.dll introuvable" :
+1. Va dans ton dossier d'installation SFML : C:\SFML-2.6.1\bin
+2. Copie tous les fichiers ".dll".
+3. Colle-les dans le dossier où ton .exe a été créé (souvent CodeFighter/build/src/).
+4. Relance le jeu !

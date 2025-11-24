@@ -20,7 +20,7 @@ set(SFML_LIBRARY_DIR ${SFML_ROOT_DIR}/lib)
 # Liste des fichiers source
 add_executable(
         ${PROJECT_NAME}
-        main.cpp
+        src/main.cpp
 )
 
 # 1. Dire au compilateur où trouver les en-têtes (#include <SFML/...)

@@ -1,33 +1,31 @@
-# Fichiers de build (générique)
-build/
+# --- DOSSIERS DE BUILD (Ne jamais partager) ---
 bin/
 obj/
+build/
+cmake-build-*/
 
-# Fichiers de build CMake (très courants)
-cmake-build*/
-CMakeCache.txt
-CMakeFiles/
-Makefile
-cmake_install.cmake
-
-# Fichiers CLion
-.idea/
-
-# Fichiers Code::Blocks
-*.cbp
-*.depend
+# --- FICHIERS TEMPORAIRES IDE ---
+# Code::Blocks (Paramètres utilisateur à ne pas partager)
 *.layout
+*.depend
 *.workspace
 
-# Fichiers macOS
-.DS_Store
-*.swp
-*.swo
+# CLion / VSCode (Anciens fichiers à ignorer)
+.idea/
+.vscode/
 
-# Binaires et bibliothèques
+# --- FICHIERS SYSTÈME ---
+.DS_Store
+Thumbs.db
+
+# --- BINAIRES & LIBRAIRIES ---
 *.exe
 *.dll
 *.a
-*.so
+*.o
 *.dylib
-*.app/
+*.so
+
+# --- FICHIER PROJET CODE::BLOCKS ---
+# Important : On force Git à inclure le fichier projet 
+!CodeFighter.cbp

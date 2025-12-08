@@ -1,4 +1,13 @@
+# Dossiers de compilation
 bin/
 obj/
+
+# Fichiers Code::Blocks temporaires
 *.layout
 *.depend
+
+# Fichiers VS Code (On ignore les futurs ajouts perso)
+.vscode/
+
+# Mais on force le maintien du fichier projet principal pour le prof
+!CodeFighters.cbp

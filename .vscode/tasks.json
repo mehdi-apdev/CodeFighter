@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build CodeFighters",
+            "command": "g++",
+            "args": [
+                "-g",
+                "-std=c++17",
+                "${workspaceFolder}/src/*.cpp",
+                "-I${workspaceFolder}/include",
+                "-I", "C:/Users/melmestari/dev/sdk/SFML-2.5.1/include",
+                "-L", "C:/Users/melmestari/dev/sdk/SFML-2.5.1/lib",
+                "-lsfml-graphics-d",
+                "-lsfml-window-d",
+                "-lsfml-system-d",
+                "-lsfml-audio-d",
+                "-o",
+                "${workspaceFolder}/bin/Debug/CodeFighters.exe"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compilation Windows (Chemin avec espaces géré)"
+        },
+        {
+            "label": "Update C::B Project",
+            "type": "shell",
+            "command": "python tools/update_cbp.py",
+            "group": "build"
+        }
+    ]
+}

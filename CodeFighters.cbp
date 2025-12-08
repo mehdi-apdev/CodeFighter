@@ -50,6 +50,12 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Extensions />
+		<Unit filename="include/Character.h" />
+		<Unit filename="include/IAbility.h" />
+		<Unit filename="include/Player.h" />
+		<Unit filename="src/Player.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/main.cpp">
 			<Option compilerVar="CC" />
 		</Unit>

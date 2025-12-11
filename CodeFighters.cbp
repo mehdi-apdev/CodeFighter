@@ -51,12 +51,27 @@
 		</Compiler>
 		<Extensions />
 		<Unit filename="include/Character.h" />
+		<Unit filename="include/CharacterView.h" />
+		<Unit filename="include/GameController.h" />
 		<Unit filename="include/IAbility.h" />
 		<Unit filename="include/Player.h" />
-		<Unit filename="src/Player.cpp">
+		<Unit filename="include/Skill.h" />
+		<Unit filename="src/controllers/GameController.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/main.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/models/Character.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/models/Player.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/models/Skill.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/views/CharacterView.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 	</Project>

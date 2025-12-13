@@ -1,18 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
+#include "../include/GameController.h"
 
-int main() {
-    // Test de lien avec la SFML
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Test CodeFighters V2");
+int main(){
+    GameController game;
+    game.run();
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        window.clear();
-        window.display();
-    }
-    return 0; 
+    return 0;
 }

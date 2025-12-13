@@ -1,4 +1,4 @@
-#include "Skill.h"
+#include "../../include/Skill.h"
 #include <iostream>
 
 // Implémentation du Constructeur

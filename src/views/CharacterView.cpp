@@ -1,4 +1,4 @@
-#include "CharacterView.h"
+#include "../../include/CharacterView.h"
 #include <iostream>
 
 // Constructeur

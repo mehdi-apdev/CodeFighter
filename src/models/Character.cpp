@@ -1,4 +1,4 @@
-#include "Character.h"
+#include "../../include/Character.h"
 #include <iostream>
 #include <algorithm> // Pour std::find_if si on cherchait par référence, mais on utilise ici une boucle simple
 

@@ -1,16 +1,16 @@
 #include "../../include/MenuState.h"
 #include "../../include/GameController.h"
-#include "../../include/BattleState.h" // Nécessaire pour lancer le jeu
+#include "../../include/BattleState.h" // Nï¿½cessaire pour lancer le jeu
 #include <iostream>
 
 MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     // 1. Chargement de l'image du MENU
-    if (!backgroundTexture.loadFromFile("C:/Users/Pawla/OneDrive/Bureau/Bac3/jeux/codeF/playgroundcodeblocks/assets/images/menu_bg.png")) {
+    if (!backgroundTexture.loadFromFile("assets/images/menu_bg.png")) {        
         // Fallback ou erreur
     }
     backgroundSprite.setTexture(backgroundTexture);
 
-    // 2. Adaptation à l'écran (Scaling)
+    // 2. Adaptation ï¿½ l'ï¿½cran (Scaling)
     sf::Vector2u texSize = backgroundTexture.getSize();
     backgroundSprite.setScale(width / texSize.x, height / texSize.y);
 
@@ -29,7 +29,7 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
         text.setFont(font);
         text.setString(options[i]);
         text.setCharacterSize(40);
-        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est sélectionné
+        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est sï¿½lectionnï¿½
         centerText(text, width / 2, height * 0.5f + (i * 100));
         menuOptions.push_back(text);
     }
@@ -52,7 +52,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
         else if (event.key.code == sf::Keyboard::Enter) {
             // ACTION
             if (selectedOptionIndex == 0) {
-                // Lancer le jeu : On change l'état vers BattleState
+                // Lancer le jeu : On change l'ï¿½tat vers BattleState
                 game.changeState(std::make_unique<BattleState>(game));
             } else if (selectedOptionIndex == 1) {
                 game.window.close();
@@ -62,7 +62,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
 }
 
 void MenuState::update(GameController& game) {
-    // Animation simple de sélection
+    // Animation simple de sï¿½lection
     for (size_t i = 0; i < menuOptions.size(); ++i) {
         if (i == selectedOptionIndex) {
             menuOptions[i].setFillColor(sf::Color::Yellow);

@@ -13,8 +13,7 @@ GameController::GameController()
 }
 
 void GameController::initResources() {
-    if (!font.loadFromFile("C:/Users/Pawla/OneDrive/Bureau/Bac3/jeux/codeF/playgroundcodeblocks/assets/fonts/ARIAL.TTF")) std::cerr << "Err Font" << std::endl;
-
+    if (!font.loadFromFile("assets/fonts/ARIAL.TTF")) std::cerr << "Err Font" << std::endl;
 }
 
 void GameController::changeState(std::unique_ptr<State> newState) {

@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "CharacterView.h"
 #include "CardView.h"
+#include "abilities/AllAbilities.h"
 #include <vector>
 #include <memory>
 
@@ -14,7 +15,7 @@ public:
     enum class BattlePhase { InterTurn, WaitingForInput, TurnTransition, CombatEnd };
 
 private:
-    // Données du match (déplacées depuis GameController)
+    // Donnï¿½es du match (dï¿½placï¿½es depuis GameController)
     Player player1;
     Player player2;
     Player* activePlayer = nullptr;
@@ -33,7 +34,7 @@ private:
     BattlePhase currentPhase;
     sf::Font& font;
 
-    // Méthodes internes privées
+    // Mï¿½thodes internes privï¿½es
     void initMatch();
     void updateHandViews();
     void centerText(sf::Text& text, float x, float y);

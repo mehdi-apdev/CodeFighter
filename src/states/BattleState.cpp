@@ -1,6 +1,5 @@
 #include "../../include/BattleState.h"
 #include "../../include/GameController.h"
-#include "../../include/ConcreteAbilities.h" // Pour PythonStrike, JavaException
 #include "../../include/MenuState.h" // Pour revenir au menu � la fin (optionnel)
 #include <iostream>
 
@@ -15,14 +14,14 @@ BattleState::BattleState(GameController& game)
 // Initialisation du Match (Setup des joueurs et des vues)
 void BattleState::initMatch() {
     // 1. Setup Joueur 1 (Pyra)
-    Character pyra(1, "Pyra (Python)", 100, "Le code dynamique.", {});
+    Character pyra(1, "Pyra (Python)", 100, "Le code dynamique.");
     player1.addCharacter(pyra);
     for(int i=0; i<10; ++i) player1.addToDeck(new PythonStrike());
     player1.shuffleDeck();
     player1.initializeHand();
 
     // 2. Setup Joueur 2 (Java-Tron)
-    Character javaTron(2, "Java-Tron", 80, "La machine virtuelle.", {});
+    Character javaTron(2, "Java-Tron", 80, "La machine virtuelle.");
     player2.addCharacter(javaTron);
     for(int i=0; i<10; ++i) player2.addToDeck(new JavaException());
     player2.shuffleDeck();

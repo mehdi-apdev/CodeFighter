@@ -54,13 +54,14 @@
 		<Unit filename="include/CardView.h" />
 		<Unit filename="include/Character.h" />
 		<Unit filename="include/CharacterView.h" />
-		<Unit filename="include/ConcreteAbilities.h" />
 		<Unit filename="include/GameController.h" />
 		<Unit filename="include/IAbility.h" />
 		<Unit filename="include/MenuState.h" />
 		<Unit filename="include/Player.h" />
-		<Unit filename="include/Skill.h" />
 		<Unit filename="include/State.h" />
+		<Unit filename="include/abilities/AllAbilities.h" />
+		<Unit filename="include/abilities/JavaException.h" />
+		<Unit filename="include/abilities/PythonStrike.h" />
 		<Unit filename="src/controllers/GameController.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -71,9 +72,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/models/Player.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/models/Skill.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/states/BattleState.cpp">

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Skill.h" // Nécessaire pour la relation
+#include "IAbility.h"
 
 class Character {
 private:
@@ -13,15 +13,14 @@ private:
     int health;
     int maxHealth; // Ajout pour le suivi
     std::string description;
-    std::vector<Skill> skills; // Relation 1..6 avec Skill
     int currentStamina; // Ajout pour la démo
 
 public:
     // Constructeur
-    Character(int id, const std::string& name, int health, const std::string& description, const std::vector<Skill>& skills);
+    Character(int id, const std::string& name, int health, const std::string& description);
 
     // Méthodes
-    bool useSkill(Skill& skill, Character& targetCharacter);
+    void useAbility();
     void takeDmg(int damage);
 
     // Fonctions utilitaires

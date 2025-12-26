@@ -1,6 +1,7 @@
 #include "../../include/MenuState.h"
 #include "../../include/GameController.h"
 #include "../../include/BattleState.h" // N�cessaire pour lancer le jeu
+#include "../../include/OptionState.h"
 #include <iostream>
 
 MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
@@ -23,8 +24,8 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     centerText(titleText, width / 2, height * 0.2f);
 
     // 2. Options
-    std::string options[] = { "JOUER", "QUITTER" };
-    for (int i = 0; i < 2; ++i) {
+    std::string options[] = { "JOUER", "OPTIONS", "QUITTER" };
+    for (int i = 0; i < 3; ++i) {
         sf::Text text;
         text.setFont(font);
         text.setString(options[i]);
@@ -50,11 +51,16 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
             selectedOptionIndex = (selectedOptionIndex + 1) % menuOptions.size();
         }
         else if (event.key.code == sf::Keyboard::Enter) {
-            // ACTION
             if (selectedOptionIndex == 0) {
-                // Lancer le jeu : On change l'�tat vers BattleState
+                // JOUER
                 game.changeState(std::make_unique<BattleState>(game));
-            } else if (selectedOptionIndex == 1) {
+            } 
+            else if (selectedOptionIndex == 1) {
+                // OPTIONS (Nouveau)
+                game.changeState(std::make_unique<OptionState>(game));
+            } 
+            else if (selectedOptionIndex == 2) {
+                // QUITTER
                 game.window.close();
             }
         }

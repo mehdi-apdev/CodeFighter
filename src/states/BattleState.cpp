@@ -1,13 +1,16 @@
 #include "../../include/BattleState.h"
 #include "../../include/GameController.h"
-#include "../../include/MenuState.h" // Pour revenir au menu � la fin (optionnel)
+#include "../../include/MenuState.h" 
 #include <iostream>
 
 // Constructeur
 BattleState::BattleState(GameController& game)
-    : font(game.font), // On utilise la police charg�e dans le Controller
+    : font(game.font), // On utilise la police chargée dans le Controller
       currentPhase(BattlePhase::InterTurn)
 {
+    // --- AUDIO : Lancement de la musique de combat ---
+    game.playBattleMusic();
+
     initMatch();
 }
 
@@ -27,17 +30,18 @@ void BattleState::initMatch() {
     player2.shuffleDeck();
     player2.initializeHand();
 
-    // 3. D�finir qui commence
+    // 3. Définir qui commence
     activePlayer = &player1;
     inactivePlayer = &player2;
 
-    // --- SETUP ARRI�RE-PLAN DE COMBAT ---
+    // --- SETUP ARRIÈRE-PLAN DE COMBAT ---
     if (!backgroundTexture.loadFromFile("assets/images/background_battle.png")) {
-        // Fallback
+        // Fallback si l'image n'est pas trouvée
+        std::cerr << "Erreur: Impossible de charger background_battle.png" << std::endl;
     }
     backgroundSprite.setTexture(backgroundTexture);
 
-    // Scaling pour 1920x1080 (valeurs cod�es en dur ou r�cup�r�es de window.getSize())
+    // Scaling pour 1920x1080
     sf::Vector2u texSize = backgroundTexture.getSize();
     backgroundSprite.setScale(1920.f / texSize.x, 1080.f / texSize.y);
 
@@ -46,7 +50,7 @@ void BattleState::initMatch() {
     float screenH = 1080.f;
     float contentWidth = 350.f;
 
-    // Positionnement Sym�trique
+    // Positionnement Symétrique
     float pyraX = (screenW * 0.20f) - (contentWidth / 2.f);
     float javaX = (screenW * 0.80f) - (contentWidth / 2.f);
     float charY = screenH * 0.10f;
@@ -68,6 +72,7 @@ void BattleState::initMatch() {
         charY, 
         0.4f
     );
+    
     // 5. Textes
     promptText.setFont(font);
     promptText.setCharacterSize(50);
@@ -77,7 +82,7 @@ void BattleState::initMatch() {
     infoText.setCharacterSize(30);
     infoText.setFillColor(sf::Color::Yellow);
 
-    // On commence en InterTurn (Cartes cach�es)
+    // On commence en InterTurn (Cartes cachées)
     currentPhase = BattlePhase::InterTurn;
     updateHandViews();
 }
@@ -106,7 +111,7 @@ void BattleState::updateHandViews() {
     float startY = screenH - 220.f;
 
     for (size_t i = 0; i < hand.size(); ++i) {
-        // On cr�e la vue pour chaque carte
+        // On crée la vue pour chaque carte
         auto view = std::make_unique<CardView>(hand[i], font, startX + i * (cardWidth + gap), startY);
         handViews.push_back(std::move(view));
     }
@@ -116,12 +121,13 @@ void BattleState::updateHandViews() {
 void BattleState::handleInput(GameController& game, sf::Event& event) {
     // Touche ECHAP pour quitter ou revenir au menu
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-        if (currentPhase == BattlePhase::CombatEnd) {
-            // Retour au menu principal
-            game.changeState(std::make_unique<MenuState>(game.font, 1920.f, 1080.f));
-        } else {
-            game.changeState(std::make_unique<MenuState>(game.font, 1920.f, 1080.f));
-        }
+        
+        // --- AUDIO : Retour à la musique du menu ---
+        game.playMenuMusic();
+
+        // Retour au menu principal
+        game.changeState(std::make_unique<MenuState>(game.font, 1920.f, 1080.f));
+        return; // Important pour éviter d'exécuter le reste du code si l'état change
     }
 
     // --- PHASE 1 : INTER-TOUR (Ecran d'attente) ---
@@ -133,35 +139,35 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
         }
     }
 
-    // --- PHASE 2 : TOUR DE JEU (S�lection & Attaque) ---
+    // --- PHASE 2 : TOUR DE JEU (Sélection & Attaque) ---
     else if (currentPhase == BattlePhase::WaitingForInput) {
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(game.window);
 
-            // A. S�lection d'une carte dans la main
+            // A. Sélection d'une carte dans la main
             for (auto& cardView : handViews) {
                 if (cardView->isClicked(mousePos)) {
                     if (selectedCard) selectedCard->highlight(false);
                     selectedCard = cardView.get();
                     selectedCard->highlight(true);
-                    return; // On a g�r� le clic
+                    return; // On a géré le clic
                 }
             }
 
-            // B. Validation sur l'adversaire (Si une carte est s�lectionn�e)
+            // B. Validation sur l'adversaire (Si une carte est sélectionnée)
             if (selectedCard) {
-                // D�terminer la zone de clic de l'adversaire
-                // Si P2 est la cible (activePlayer est P1), il est � droite (x ~1360)
-                // Si P1 est la cible (activePlayer est P2), il est � gauche (x ~210)
+                // Déterminer la zone de clic de l'adversaire
+                // Si P2 est la cible (activePlayer est P1), il est à droite (x ~1360)
+                // Si P1 est la cible (activePlayer est P2), il est à gauche (x ~210)
                 bool targetIsRight = (inactivePlayer == &player2);
 
-                // Coordonn�es ajust�es pour 1920x1080 (voir calculs pr�c�dents)
+                // Coordonnées ajustées pour 1920x1080 (voir calculs précédents)
                 sf::IntRect targetBounds;
                 if (targetIsRight) targetBounds = sf::IntRect(1360, 78, 350, 400);
                 else               targetBounds = sf::IntRect(210, 78, 350, 400);
 
                 if (targetBounds.contains(mousePos)) {
-                    // EX�CUTION DE L'ATTAQUE
+                    // EXÉCUTION DE L'ATTAQUE
                     Character& attacker = activePlayer->getCharacter(0);
                     Character& defender = inactivePlayer->getCharacter(0);
 
@@ -177,12 +183,12 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
     }
 }
 
-// Logique de Mise � Jour (Update)
+// Logique de Mise à Jour (Update)
 void BattleState::update(GameController& game) {
-    // Si le combat est fini, on ne met � jour que les textes (partie basse de la fonction)
+    // Si le combat est fini, on ne met à jour que les textes (partie basse de la fonction)
     if (currentPhase != BattlePhase::CombatEnd) {
 
-        // 1. V�rification des Morts
+        // 1. Vérification des Morts
         bool p1Dead = !player1.getCharacter(0).isAlive();
         bool p2Dead = !player2.getCharacter(0).isAlive();
 
@@ -193,16 +199,16 @@ void BattleState::update(GameController& game) {
 
         // 2. Transition de Tour
         else if (currentPhase == BattlePhase::TurnTransition) {
-            // �change des joueurs
+            // Échange des joueurs
             std::swap(activePlayer, inactivePlayer);
 
-            // Passage en mode cach�
+            // Passage en mode caché
             currentPhase = BattlePhase::InterTurn;
             updateHandViews();
         }
     }
 
-    // --- MISE � JOUR UI & TEXTES ---
+    // --- MISE À JOUR UI & TEXTES ---
     float screenW = 1920.f;
 
     if (currentPhase == BattlePhase::CombatEnd) {
@@ -239,7 +245,7 @@ void BattleState::update(GameController& game) {
 
 // Rendu (Draw)
 void BattleState::render(GameController& game, sf::RenderWindow& window) {
-    // Note: Le game.render() a d�j� effac� l'�cran et dessin� le backgroundSprite.
+    // Note: Le game.render() a déjà effacé l'écran.
     // On dessine juste par dessus.
 
     window.draw(backgroundSprite);

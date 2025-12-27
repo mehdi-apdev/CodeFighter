@@ -8,14 +8,13 @@
 #include "abilities/AllAbilities.h"
 #include <vector>
 #include <memory>
+#include <SFML/System/Clock.hpp> // For animation time
 
 class BattleState : public State {
 public:
-    // Enum interne pour le flux du combat
     enum class BattlePhase { InterTurn, WaitingForInput, TurnTransition, CombatEnd };
 
 private:
-    // Donn�es du match (d�plac�es depuis GameController)
     Player player1;
     Player player2;
     Player* activePlayer = nullptr;
@@ -27,20 +26,27 @@ private:
     std::unique_ptr<CharacterView> pyraView;
     std::unique_ptr<CharacterView> javaTronView;
     std::vector<std::unique_ptr<CardView>> handViews;
+    
     CardView* selectedCard = nullptr;
+    int selectedCardIndex = -1; // To know which card to play in the vector
 
     sf::Text promptText;
     sf::Text infoText;
+    
+    // Variables for the reshuffle animation
+    sf::Text reshuffleText;      
+    sf::Clock animClock;         
+    float reshuffleDisplayTime = 0.0f; 
+
     BattlePhase currentPhase;
     sf::Font& font;
 
-    // M�thodes internes priv�es
     void initMatch();
     void updateHandViews();
     void centerText(sf::Text& text, float x, float y);
 
 public:
-    BattleState(GameController& game); // Constructeur initialise le match
+    BattleState(GameController& game); 
 
     void handleInput(GameController& game, sf::Event& event) override;
     void update(GameController& game) override;

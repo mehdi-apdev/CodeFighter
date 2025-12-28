@@ -2,7 +2,7 @@
 #include "../../include/GameController.h"
 #include "../../include/CharacterSelectionState.h" // <--- AJOUT IMPORTANT
 #include "../../include/OptionState.h"
-// BattleState.h n'est plus nécessaire ici car on ne le lance plus directement
+
 #include <iostream>
 
 MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {

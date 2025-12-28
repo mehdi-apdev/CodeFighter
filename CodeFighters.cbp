@@ -53,7 +53,7 @@
 		<Unit filename="include/BattleState.h" />
 		<Unit filename="include/CardView.h" />
 		<Unit filename="include/Character.h" />
-
+		<Unit filename="include/CharacterSelectionState.h" />
 		<Unit filename="include/CharacterView.h" />
 		<Unit filename="include/GameController.h" />
 		<Unit filename="include/IAbility.h" />
@@ -79,8 +79,13 @@
 		<Unit filename="src/states/BattleState.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
-
+		<Unit filename="src/states/CharacterSelectionState.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/states/MenuState.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/states/OptionState.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/views/CardView.cpp">

@@ -1,8 +1,8 @@
 #include "../../include/MenuState.h"
 #include "../../include/GameController.h"
-#include "../../include/CharacterSelectionState.h" // <--- AJOUT IMPORTANT
-#include "../../include/OptionState.h"
 
+#include "../../include/BattleState.h" // N�cessaire pour lancer le jeu
+#include "../../include/OptionState.h"
 #include <iostream>
 
 MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
@@ -12,7 +12,8 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     }
     backgroundSprite.setTexture(backgroundTexture);
 
-    // 2. Adaptation à l'écran (Scaling)
+
+    // 2. Adaptation � l'�cran (Scaling)
     sf::Vector2u texSize = backgroundTexture.getSize();
     backgroundSprite.setScale(width / texSize.x, height / texSize.y);
 
@@ -25,13 +26,15 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     centerText(titleText, width / 2, height * 0.2f);
 
     // 2. Options
-    std::string options[] = { "JOUER", "OPTIONS", "QUITTER" };
+
+    std::string options[] = { "JOUER","OPTIONS","QUITTER" };
     for (int i = 0; i < 3; ++i) {
         sf::Text text;
         text.setFont(font);
         text.setString(options[i]);
         text.setCharacterSize(40);
-        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est sélectionné
+
+        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est s�lectionn�
         centerText(text, width / 2, height * 0.5f + (i * 100));
         menuOptions.push_back(text);
     }
@@ -52,18 +55,14 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
             selectedOptionIndex = (selectedOptionIndex + 1) % menuOptions.size();
         }
         else if (event.key.code == sf::Keyboard::Enter) {
-            
-            // --- C'EST ICI QUE TOUT SE JOUE ---
+
+            // ACTION
             if (selectedOptionIndex == 0) {
-                // JOUER -> On lance la SÉLECTION des personnages
-                game.changeState(std::make_unique<CharacterSelectionState>(game));
-            } 
-            else if (selectedOptionIndex == 1) {
-                // OPTIONS
+                // Lancer le jeu : On change l'�tat vers BattleState
+                game.changeState(std::make_unique<BattleState>(game));
+            } else if (selectedOptionIndex == 1) {
                 game.changeState(std::make_unique<OptionState>(game));
-            } 
-            else if (selectedOptionIndex == 2) {
-                // QUITTER
+            } else if (selectedOptionIndex == 2) {
                 game.window.close();
             }
         }
@@ -72,6 +71,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
 
 void MenuState::update(GameController& game) {
     // Animation simple de sélection
+    // Animation simple de s�lection
     for (size_t i = 0; i < menuOptions.size(); ++i) {
         if (i == selectedOptionIndex) {
             menuOptions[i].setFillColor(sf::Color::Yellow);
@@ -91,3 +91,4 @@ void MenuState::render(GameController& game, sf::RenderWindow& window) {
         window.draw(option);
     }
 }
+

@@ -27,6 +27,7 @@ public:
     void update(GameController& game) override;
     void render(GameController& game, sf::RenderWindow& window) override;
     
+
     void centerText(sf::Text& text, float x, float y);
 };
 

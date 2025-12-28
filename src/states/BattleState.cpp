@@ -7,6 +7,7 @@
 BattleState::BattleState(GameController& game)
     : font(game.font), currentPhase(BattlePhase::InterTurn)
 {
+    game.playBattleMusic();
     initMatch();
 }
 
@@ -85,6 +86,7 @@ void BattleState::updateHandViews() {
 
 void BattleState::handleInput(GameController& game, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+        game.playMenuMusic();
         game.changeState(std::make_unique<MenuState>(game.font, 1920.f, 1080.f));
     }
 

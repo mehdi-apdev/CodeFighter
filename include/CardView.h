@@ -6,7 +6,7 @@
 
 class CardView {
 private:
-    IAbility* ability; // Pointeur vers le Modèle (Command)
+    IAbility* ability; // Pointeur vers le Modï¿½le (Command)
 
     sf::RectangleShape cardShape;
     sf::Text nameText;
@@ -24,7 +24,7 @@ public:
     // Interaction (Controller -> View)
     bool isClicked(sf::Vector2i mousePos);
     void setPosition(float x, float y);
-    void highlight(bool active); // Change la couleur si sélectionnée
+    void highlight(bool active); // Change la couleur si sï¿½lectionnï¿½e
 
     // Getter pour le Controller
     IAbility* getAbility() const { return ability; }

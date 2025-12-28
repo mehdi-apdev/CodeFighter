@@ -6,11 +6,11 @@ CardView::CardView(IAbility* ability, sf::Font& font, float x, float y)
     // 1. Fond de la carte
     cardShape.setSize(sf::Vector2f(120.f, 160.f));
     cardShape.setPosition(x, y);
-    cardShape.setFillColor(sf::Color(40, 40, 60)); // Bleu foncé
+    cardShape.setFillColor(sf::Color(40, 40, 60)); // Bleu foncï¿½
     cardShape.setOutlineThickness(2.f);
     cardShape.setOutlineColor(sf::Color::White);
 
-    // 2. Textes (Nom, Coût)
+    // 2. Textes (Nom, Coï¿½t)
     nameText.setFont(font);
     nameText.setString(ability->getName());
     nameText.setCharacterSize(14);

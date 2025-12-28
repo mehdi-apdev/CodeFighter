@@ -34,8 +34,7 @@ OptionState::OptionState(GameController& game) : font(game.font) {
     sliderHandle.setSize(sf::Vector2f(30, 60));
     sliderHandle.setFillColor(sf::Color::Red);
     sliderHandle.setOrigin(15, 30);
-
-
+    
     // Calcul de la position initiale du curseur basé sur le volume actuel
     float ratio = game.globalVolume / 100.0f;
     float handleX = (1920 / 2 - 300) + (ratio * 600); 

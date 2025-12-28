@@ -4,21 +4,34 @@
         {
             "type": "shell",
             "label": "Build CodeFighters",
-            "command": "g++",
+            "command": "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe",
             "args": [
+                "-fdiagnostics-color=always",
                 "-g",
                 "-std=c++17",
                 "${workspaceFolder}/src/*.cpp",
-                "-I${workspaceFolder}/include",
-                "-I", "C:/Users/melmestari/dev/sdk/SFML-2.5.1/include",
-                "-L", "C:/Users/melmestari/dev/sdk/SFML-2.5.1/lib",
+                "${workspaceFolder}/src/controllers/*.cpp",
+                "${workspaceFolder}/src/models/*.cpp",
+                "${workspaceFolder}/src/views/*.cpp",
+                "${workspaceFolder}/src/states/*.cpp",
+                "-o",
+                "${workspaceFolder}/bin/Debug/CodeFighters.exe",
+                "-I",
+                "${workspaceFolder}/include",
+                "-I",
+                "${workspaceFolder}/src",
+                "-I",
+                "C:/SFML-2.5.1/include",
+                "-L",
+                "C:/SFML-2.5.1/lib",
                 "-lsfml-graphics-d",
                 "-lsfml-window-d",
                 "-lsfml-system-d",
-                "-lsfml-audio-d",
-                "-o",
-                "${workspaceFolder}/bin/Debug/CodeFighters.exe"
+                "-lsfml-audio-d"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "problemMatcher": [
                 "$gcc"
             ],
@@ -26,13 +39,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Compilation Windows (Chemin avec espaces géré)"
-        },
-        {
-            "label": "Update C::B Project",
-            "type": "shell",
-            "command": "python tools/update_cbp.py",
-            "group": "build"
+            "detail": "Compilation avec C:/SFML-2.5.1"
         }
     ]
 }

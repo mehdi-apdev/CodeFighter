@@ -10,7 +10,7 @@ private:
     sf::Text titleText;
     std::vector<sf::Text> menuOptions;
     int selectedOptionIndex = 0;
-    sf::Font& font; // Référence vers la police du jeu
+    sf::Font& font; // Rï¿½fï¿½rence vers la police du jeu
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
 

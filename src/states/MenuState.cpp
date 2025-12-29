@@ -1,7 +1,8 @@
 #include "../../include/MenuState.h"
 #include "../../include/GameController.h"
-#include "../../include/BattleState.h" // N�cessaire pour lancer le jeu
+#include "../../include/CharacterSelectionState.h" // <--- AJOUT IMPORTANT
 #include "../../include/OptionState.h"
+// BattleState.h n'est plus nécessaire ici car on ne le lance plus directement
 #include <iostream>
 
 MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
@@ -11,7 +12,7 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     }
     backgroundSprite.setTexture(backgroundTexture);
 
-    // 2. Adaptation � l'�cran (Scaling)
+    // 2. Adaptation à l'écran (Scaling)
     sf::Vector2u texSize = backgroundTexture.getSize();
     backgroundSprite.setScale(width / texSize.x, height / texSize.y);
 
@@ -30,7 +31,7 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
         text.setFont(font);
         text.setString(options[i]);
         text.setCharacterSize(40);
-        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est s�lectionn�
+        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est sélectionné
         centerText(text, width / 2, height * 0.5f + (i * 100));
         menuOptions.push_back(text);
     }
@@ -51,12 +52,14 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
             selectedOptionIndex = (selectedOptionIndex + 1) % menuOptions.size();
         }
         else if (event.key.code == sf::Keyboard::Enter) {
+            
+            // --- C'EST ICI QUE TOUT SE JOUE ---
             if (selectedOptionIndex == 0) {
-                // JOUER
-                game.changeState(std::make_unique<BattleState>(game));
+                // JOUER -> On lance la SÉLECTION des personnages
+                game.changeState(std::make_unique<CharacterSelectionState>(game));
             } 
             else if (selectedOptionIndex == 1) {
-                // OPTIONS (Nouveau)
+                // OPTIONS
                 game.changeState(std::make_unique<OptionState>(game));
             } 
             else if (selectedOptionIndex == 2) {
@@ -68,7 +71,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
 }
 
 void MenuState::update(GameController& game) {
-    // Animation simple de s�lection
+    // Animation simple de sélection
     for (size_t i = 0; i < menuOptions.size(); ++i) {
         if (i == selectedOptionIndex) {
             menuOptions[i].setFillColor(sf::Color::Yellow);

@@ -6,8 +6,8 @@
 #include "CharacterView.h"
 #include "CardView.h"
 #include "abilities/AllAbilities.h"
-#include <vector>
-#include <memory>
+#include <vector>  // <--- INDISPENSABLE pour std::vector
+#include <memory>  // <--- INDISPENSABLE pour std::unique_ptr
 
 class BattleState : public State {
 public:
@@ -15,7 +15,7 @@ public:
     enum class BattlePhase { InterTurn, WaitingForInput, TurnTransition, CombatEnd };
 
 private:
-    // Donn�es du match (d�plac�es depuis GameController)
+    // Données du match
     Player player1;
     Player player2;
     Player* activePlayer = nullptr;
@@ -34,13 +34,15 @@ private:
     BattlePhase currentPhase;
     sf::Font& font;
 
-    // M�thodes internes priv�es
+    // Méthodes internes privées
     void initMatch();
     void updateHandViews();
     void centerText(sf::Text& text, float x, float y);
 
 public:
-    BattleState(GameController& game); // Constructeur initialise le match
+    // --- CORRECTION CRITIQUE ICI ---
+    // On déclare que le constructeur accepte les équipes (std::vector)
+    BattleState(GameController& game, std::vector<Character> p1Team, std::vector<Character> p2Team);
 
     void handleInput(GameController& game, sf::Event& event) override;
     void update(GameController& game) override;

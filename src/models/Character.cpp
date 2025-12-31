@@ -1,13 +1,13 @@
-#include "../../include/Character.h"
+#include "../../include/models/Character.h"
 #include <iostream>
-#include <algorithm> // Pour std::find_if si on cherchait par référence, mais on utilise ici une boucle simple
+#include <algorithm> // For std::find_if if searching by reference, but a simple loop is used here
 
-// Implémentation du Constructeur
+// Constructor implementation
 Character::Character(int id, const std::string& name, int health, const std::string& description)
     : id(id), name(name), health(health), maxHealth(health), description(description), currentStamina(100) {}
 
 
-// Implémentation de takeDmg
+// takeDmg implementation
 void Character::takeDmg(int damage) {
     health -= damage;
     if (health < 0) {
@@ -15,7 +15,7 @@ void Character::takeDmg(int damage) {
     }
 }
 
-// Implémentation des fonctions utilitaires
+// Utility functions implementation
 bool Character::isAlive() const {
     return health > 0;
 }

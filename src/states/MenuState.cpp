@@ -1,22 +1,22 @@
-#include "../../include/MenuState.h"
-#include "../../include/GameController.h"
-#include "../../include/CharacterSelectionState.h" // <--- AJOUT IMPORTANT
-#include "../../include/OptionState.h"
-// BattleState.h n'est plus nécessaire ici car on ne le lance plus directement
+#include "../../include/states/MenuState.h"
+#include "../../include/controllers/GameController.h"
+#include "../../include/states/CharacterSelectionState.h"
+#include "../../include/states/OptionState.h"
+#include "core/ResourceManager.h"
 #include <iostream>
 
-MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
-    // 1. Chargement de l'image du MENU
-    if (!backgroundTexture.loadFromFile("assets/images/menu_bg.png")) {        
-        // Fallback ou erreur
-    }
-    backgroundSprite.setTexture(backgroundTexture);
+MenuState::MenuState(float width, float height) {
+    // Get the global font by its full path
+    sf::Font& font = ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF");
+    
+    // 1. Load MENU image via ResourceManager using its full path
+    backgroundSprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/menu_bg.png"));
 
-    // 2. Adaptation à l'écran (Scaling)
-    sf::Vector2u texSize = backgroundTexture.getSize();
+    // 2. Screen adaptation (Scaling)
+    sf::Vector2u texSize = backgroundSprite.getTexture()->getSize();
     backgroundSprite.setScale(width / texSize.x, height / texSize.y);
 
-    // 1. Titre
+    // 1. Title
     titleText.setFont(font);
     titleText.setString("CODE FIGHTER");
     titleText.setCharacterSize(80);
@@ -25,13 +25,13 @@ MenuState::MenuState(sf::Font& font, float width, float height) : font(font) {
     centerText(titleText, width / 2, height * 0.2f);
 
     // 2. Options
-    std::string options[] = { "JOUER", "OPTIONS", "QUITTER" };
+    std::string options[] = { "PLAY", "OPTIONS", "QUIT" };
     for (int i = 0; i < 3; ++i) {
         sf::Text text;
         text.setFont(font);
         text.setString(options[i]);
         text.setCharacterSize(40);
-        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // Le premier est sélectionné
+        text.setFillColor(i == 0 ? sf::Color::Yellow : sf::Color::White); // The first one is selected
         centerText(text, width / 2, height * 0.5f + (i * 100));
         menuOptions.push_back(text);
     }
@@ -53,9 +53,9 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
         }
         else if (event.key.code == sf::Keyboard::Enter) {
             
-            // --- C'EST ICI QUE TOUT SE JOUE ---
+            // --- THIS IS WHERE IT ALL HAPPENS ---
             if (selectedOptionIndex == 0) {
-                // JOUER -> On lance la SÉLECTION des personnages
+                // PLAY -> Launch character SELECTION
                 game.changeState(std::make_unique<CharacterSelectionState>(game));
             } 
             else if (selectedOptionIndex == 1) {
@@ -63,7 +63,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
                 game.changeState(std::make_unique<OptionState>(game));
             } 
             else if (selectedOptionIndex == 2) {
-                // QUITTER
+                // QUIT
                 game.window.close();
             }
         }
@@ -71,7 +71,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
 }
 
 void MenuState::update(GameController& game) {
-    // Animation simple de sélection
+    // Simple selection animation
     for (size_t i = 0; i < menuOptions.size(); ++i) {
         if (i == selectedOptionIndex) {
             menuOptions[i].setFillColor(sf::Color::Yellow);

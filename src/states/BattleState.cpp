@@ -1,23 +1,21 @@
-#include "../../include/BattleState.h"
-#include "../../include/GameController.h"
-#include "../../include/MenuState.h"
+#include "../../include/states/BattleState.h"
+#include "../../include/controllers/GameController.h"
+#include "../../include/states/MenuState.h"
+#include "core/ResourceManager.h"
 #include <iostream>
-#include <string> // Important pour la recherche de texte
-#include <memory> // Pour std::make_unique
+#include <string>
+#include <memory>
 
 BattleState::BattleState(GameController& game, std::vector<Character> p1Team, std::vector<Character> p2Team)
-    : font(game.font),
-      currentPhase(BattlePhase::InterTurn)
+    : currentPhase(BattlePhase::InterTurn)
 {
-    // Remplissage J1
+    // Player 1 setup
     for (const auto& c : p1Team) player1.addCharacter(c);
-    // On peut ajouter ici une logique pour personnaliser le deck selon le perso, 
-    // mais pour l'instant on garde le deck par défaut.
     for(int i=0; i<10; ++i) player1.addToDeck(new PythonStrike());
     player1.shuffleDeck();
     player1.initializeHand();
 
-    // Remplissage J2
+    // Player 2 setup
     for (const auto& c : p2Team) player2.addCharacter(c);
     for(int i=0; i<10; ++i) player2.addToDeck(new JavaException());
     player2.shuffleDeck();
@@ -27,17 +25,14 @@ BattleState::BattleState(GameController& game, std::vector<Character> p1Team, st
     initMatch();
 }
 
-// Initialisation du Match
+// Match initialization
 void BattleState::initMatch() {
     activePlayer = &player1;
     inactivePlayer = &player2;
 
-    // Fond
-    if (!backgroundTexture.loadFromFile("assets/images/background_battle.png")) {
-        std::cerr << "Erreur: Impossible de charger background_battle.png" << std::endl;
-    }
-    backgroundSprite.setTexture(backgroundTexture);
-    sf::Vector2u texSize = backgroundTexture.getSize();
+    // Background
+    backgroundSprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/background_battle.png"));
+    sf::Vector2u texSize = backgroundSprite.getTexture()->getSize();
     backgroundSprite.setScale(1920.f / texSize.x, 1080.f / texSize.y);
 
     // Positions
@@ -48,45 +43,26 @@ void BattleState::initMatch() {
     float javaX = (screenW * 0.80f) - (contentWidth / 2.f);
     float charY = screenH * 0.10f;
 
-    // --- LOGIQUE DYNAMIQUE POUR L'IMAGE J1 ---
     std::string p1Name = player1.getActiveCharacter().getName();
-    std::string p1Img;
+    std::string p1Img = (p1Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
     
-    // Si le nom contient "Pyra", on met l'image de Pyra, sinon Java
-    if (p1Name.find("Pyra") != std::string::npos) {
-        p1Img = "assets/images/pyra_python.png";
-        std::cout << "DEBUG: J1 joue Pyra -> Image Pyra chargee." << std::endl;
-    } else {
-        p1Img = "assets/images/java_tron.png";
-        std::cout << "DEBUG: J1 joue Java -> Image Java chargee." << std::endl;
-    }
-
-    // Note : On utilise la variable 'pyraView' même si ce n'est pas Pyra (variable héritée)
     pyraView = std::make_unique<CharacterView>(
         player1.getActiveCharacter(),
         p1Img, 
-        font, pyraX, charY, 0.4f
+        pyraX, charY, 0.4f
     );
 
-    // --- LOGIQUE DYNAMIQUE POUR L'IMAGE J2 ---
     std::string p2Name = player2.getActiveCharacter().getName();
-    std::string p2Img;
-
-    if (p2Name.find("Pyra") != std::string::npos) {
-        p2Img = "assets/images/pyra_python.png";
-        std::cout << "DEBUG: J2 joue Pyra -> Image Pyra chargee." << std::endl;
-    } else {
-        p2Img = "assets/images/java_tron.png";
-        std::cout << "DEBUG: J2 joue Java -> Image Java chargee." << std::endl;
-    }
+    std::string p2Img = (p2Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
 
     javaTronView = std::make_unique<CharacterView>(
         player2.getActiveCharacter(),
         p2Img,
-        font, javaX, charY, 0.4f
+        javaX, charY, 0.4f
     );
 
-    // Textes UI
+    // UI Texts
+    sf::Font& font = ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF");
     promptText.setFont(font);
     promptText.setCharacterSize(50);
     promptText.setFillColor(sf::Color::White);
@@ -119,7 +95,7 @@ void BattleState::updateHandViews() {
     float startY = screenH - 220.f;
 
     for (size_t i = 0; i < hand.size(); ++i) {
-        auto view = std::make_unique<CardView>(hand[i], font, startX + i * (cardWidth + gap), startY);
+        auto view = std::make_unique<CardView>(hand[i], startX + i * (cardWidth + gap), startY);
         handViews.push_back(std::move(view));
     }
 }
@@ -127,7 +103,7 @@ void BattleState::updateHandViews() {
 void BattleState::handleInput(GameController& game, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
         game.playMenuMusic();
-        game.changeState(std::make_unique<MenuState>(game.font, 1920.f, 1080.f));
+        game.changeState(std::make_unique<MenuState>(1920.f, 1080.f)); // Signature updated
         return;
     }
 
@@ -152,9 +128,7 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
 
             if (selectedCard) {
                 bool targetIsRight = (inactivePlayer == &player2);
-                sf::IntRect targetBounds;
-                if (targetIsRight) targetBounds = sf::IntRect(1360, 78, 350, 400);
-                else               targetBounds = sf::IntRect(210, 78, 350, 400);
+                sf::IntRect targetBounds = targetIsRight ? sf::IntRect(1360, 78, 350, 400) : sf::IntRect(210, 78, 350, 400);
 
                 if (targetBounds.contains(mousePos)) {
                     Character& attacker = activePlayer->getActiveCharacter();
@@ -172,54 +146,26 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
 void BattleState::update(GameController& game) {
     if (currentPhase != BattlePhase::CombatEnd) {
 
-        // --- GESTION DU SYSTÈME "TAG TEAM" AVEC IMAGES DYNAMIQUES ---
-
-        // 1. Vérification Joueur 2 (Ennemi)
         if (!player2.getActiveCharacter().isAlive()) {
             if (player2.switchToNextCharacter()) {
-                infoText.setString("Personnage KO ! Le suivant arrive !");
-                
-                // Choix dynamique de l'image pour le REMPLAÇANT J2
-                std::string nextImg;
-                if (player2.getActiveCharacter().getName().find("Pyra") != std::string::npos) 
-                    nextImg = "assets/images/pyra_python.png";
-                else 
-                    nextImg = "assets/images/java_tron.png";
-
-                javaTronView = std::make_unique<CharacterView>(
-                    player2.getActiveCharacter(),
-                    nextImg, // Image correcte
-                    font, 1360.f, 108.f, 0.4f
-                );
+                infoText.setString("Character KO! Next one arrives!");
+                std::string nextImg = (player2.getActiveCharacter().getName().find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
+                javaTronView = std::make_unique<CharacterView>(player2.getActiveCharacter(), nextImg, 1360.f, 108.f, 0.4f);
             } else {
                 currentPhase = BattlePhase::CombatEnd;
                 handViews.clear();
             }
         }
-
-        // 2. Vérification Joueur 1 (Moi)
         else if (!player1.getActiveCharacter().isAlive()) {
             if (player1.switchToNextCharacter()) {
-                infoText.setString("Personnage KO ! Renforts !");
-                
-                // Choix dynamique de l'image pour le REMPLAÇANT J1
-                std::string nextImg;
-                if (player1.getActiveCharacter().getName().find("Pyra") != std::string::npos) 
-                    nextImg = "assets/images/pyra_python.png";
-                else 
-                    nextImg = "assets/images/java_tron.png";
-
-                pyraView = std::make_unique<CharacterView>(
-                    player1.getActiveCharacter(),
-                    nextImg, // Image correcte
-                    font, 210.f, 108.f, 0.4f
-                );
+                infoText.setString("Character KO! Reinforcements!");
+                std::string nextImg = (player1.getActiveCharacter().getName().find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
+                pyraView = std::make_unique<CharacterView>(player1.getActiveCharacter(), nextImg, 210.f, 108.f, 0.4f);
             } else {
                 currentPhase = BattlePhase::CombatEnd;
                 handViews.clear();
             }
         }
-
         else if (currentPhase == BattlePhase::TurnTransition) {
             std::swap(activePlayer, inactivePlayer);
             currentPhase = BattlePhase::InterTurn;
@@ -228,18 +174,21 @@ void BattleState::update(GameController& game) {
     }
 
     float screenW = 1920.f;
+    sf::Font& font = ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF");
+    promptText.setFont(font); // Re-set font just in case
+    infoText.setFont(font);
 
     if (currentPhase == BattlePhase::CombatEnd) {
         bool p1Alive = !player1.isDefeated();
         std::string winnerName = p1Alive ? "JOUEUR 1" : "JOUEUR 2";
-        promptText.setString("VICTOIRE FINAL : " + winnerName + " Gagne !");
+        promptText.setString("FINAL VICTORY: " + winnerName + " Wins!");
         promptText.setFillColor(p1Alive ? sf::Color::Cyan : sf::Color::Red);
-        infoText.setString("Appuyez sur ECHAP pour revenir au Menu.");
+        infoText.setString("Press ESC to return to Menu.");
     }
     else if (currentPhase == BattlePhase::InterTurn) {
-        promptText.setString("Tour de " + activePlayer->getActiveCharacter().getName());
+        promptText.setString("Turn of " + activePlayer->getActiveCharacter().getName());
         promptText.setFillColor(sf::Color::Yellow);
-        infoText.setString(">>> CLIQUEZ POUR COMMENCER <<<");
+        infoText.setString(">>> CLICK TO START <<<");
     }
     else {
         std::string p1State = player1.getActiveCharacter().getName() + " (" + std::to_string(player1.getActiveCharacter().getHealth()) + ")";
@@ -247,8 +196,8 @@ void BattleState::update(GameController& game) {
         promptText.setString(p1State + "   VS   " + p2State);
         promptText.setFillColor(sf::Color::White);
 
-        if (selectedCard) infoText.setString("Ciblez l'adversaire !");
-        else infoText.setString("Choisissez une carte.");
+        if (selectedCard) infoText.setString("Target the opponent!");
+        else infoText.setString("Choose a card.");
     }
 
     centerText(promptText, screenW / 2.0f, 50.f);

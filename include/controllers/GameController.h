@@ -3,27 +3,27 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "State.h"
+#include "../states/State.h"
 #include <SFML/Audio.hpp>
 
 class GameController {
 public:
     sf::RenderWindow window;
-    sf::Font font;
+    // sf::Font font; // <-- Removed
     sf::Music MenuMusic;
     sf::Music BattleMusic;
     float globalVolume = 50.0f;
 
-    // LE COEUR DU PATTERN STATE
+    // THE CORE OF THE STATE PATTERN
     std::unique_ptr<State> currentState;
 
     GameController();
     ~GameController() = default;
 
     void run();
-    void changeState(std::unique_ptr<State> newState); // Pour passer de Menu à Battle
+    void changeState(std::unique_ptr<State> newState); // To switch from Menu to Battle
 
-    // Ressources partagées
+    // Shared resources
     void initResources();
 
     void setMusicVolume(float volume);

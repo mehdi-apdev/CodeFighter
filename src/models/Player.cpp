@@ -1,23 +1,23 @@
-#include "../../include/Player.h"
+#include "../../include/models/Player.h"
 #include <algorithm>
 #include <random>
-#include <stdexcept> // Nécessaire pour gérer les erreurs si la liste est vide
+#include <stdexcept> // Required to handle errors if the list is empty
 
 // Constructeur
-// MODIFICATION : Initialisation de l'index du personnage actif à 0
+// MODIFICATION: Initialization of the active character index to 0
 Player::Player() : endurance(30), activeCharacterIndex(0) {
-    // La main sera initialisée avec initializeHand()
-    characters.reserve(3); // Réserve de l'espace pour 3 personnages
+    // The hand will be initialized with initializeHand()
+    characters.reserve(3); // Reserve space for 3 characters
 }
 
 // Destructeur
 Player::~Player() {
-    // Libération de la mémoire des cartes du deck
+    // Freeing memory of deck cards
     for (IAbility* card : deck) {
         delete card;
     }
 
-    // Libération de la mémoire des cartes de la main
+    // Freeing memory of hand cards
     for (IAbility* card : hand) {
         delete card;
     }
@@ -52,15 +52,15 @@ void Player::addToHand(IAbility* card) {
 
 void Player::playCard(int index) {
     if (index >= 0 && index < static_cast<int>(hand.size())) {
-        // Ici vous devrez implémenter la logique pour jouer la carte
-        // Pour l'instant on retire simplement la carte de la main
+        // Here you will need to implement the logic to play the card
+        // For now, we simply remove the card from the hand
         hand.erase(hand.begin() + index);
     }
 }
 
 void Player::discardCard(int index) {
     if (index >= 0 && index < static_cast<int>(hand.size())) {
-        delete hand[index]; // Libère la mémoire
+        delete hand[index]; // Frees memory
         hand.erase(hand.begin() + index);
     }
 }
@@ -80,11 +80,11 @@ Character& Player::getCharacter(int index) {
 
 Character& Player::getActiveCharacter() {
     if (characters.empty()) {
-        // Sécurité : évite un crash si on appelle ça sans personnages
+        // Safety: avoids a crash if called without characters
         throw std::runtime_error("Erreur : Aucun personnage dans l'equipe !");
     }
     
-    // Sécurité supplémentaire : si l'index dépasse, on renvoie le dernier
+    // Additional safety: if the index exceeds, returns the last one
     if (activeCharacterIndex >= static_cast<int>(characters.size())) {
         return characters.back();
     }
@@ -98,7 +98,7 @@ bool Player::switchToNextCharacter() {
         activeCharacterIndex++;
         return true; // Le changement a réussi, un nouveau perso arrive
     }
-    return false; // Échec : C'était le dernier perso, le joueur a perdu
+    return false; // Failure: It was the last character, the player lost
 }
 
 // ---------------------------------------------------
@@ -118,7 +118,7 @@ int Player::getEndurance() const {
 
 void Player::modifyEndurance(int amount) {
     endurance += amount;
-    if (endurance < 0) endurance = 0; // Évite les valeurs négatives
+    if (endurance < 0) endurance = 0; // Avoids negative values
 }
 
 // Getters
@@ -149,15 +149,15 @@ void Player::initializeHand() {
 }
 
 bool Player::isDefeated() const {
-    // MODIFICATION : Le joueur est vaincu si son équipe est vide ou si le dernier perso est mort
+    // MODIFICATION: The player is defeated if their team is empty or if the last character is dead
     
     if (characters.empty()) return true;
 
-    // Si on est sur le dernier personnage de la liste...
+    // If on the last character of the list...
     bool isLastCharacter = (activeCharacterIndex >= static_cast<int>(characters.size()) - 1);
     
-    // ...et qu'il n'a plus de vie (on suppose que getHealth() existe via Character.h)
-    // Note : On accède directement au dernier élément pour être sûr
+    // ...and it has no more health (assuming getHealth() exists via Character.h)
+    // Note: We access the last element directly to be sure
     bool isDead = (characters.back().getHealth() <= 0);
 
     return isLastCharacter && isDead;

@@ -3,30 +3,30 @@
 
 #include <string>
 #include <vector>
-#include "IAbility.h"
+#include "../abilities/IAbility.h"
 
 class Character {
 private:
-    // Attributs
+    // Attributes
     int id;
     std::string name;
     int health;
-    int maxHealth; // Ajout pour le suivi
+    int maxHealth; // Added for tracking
     std::string description;
-    int currentStamina; // Ajout pour la démo
+    int currentStamina; // Added for demo
 
 public:
-    // Constructeur
+    // Constructor
     Character(int id, const std::string& name, int health, const std::string& description);
 
-    // Méthodes
+    // Methods
     void useAbility();
     void takeDmg(int damage);
 
-    // Fonctions utilitaires
+    // Utility functions
     bool isAlive() const;
     void printStatus() const;
-    const std::string& getName() const; // Getter simple
+    const std::string& getName() const; // Simple Getter
     int getHealth() const { return health; }
     int getMaxHealth() const { return maxHealth; }
 };

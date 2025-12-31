@@ -2,26 +2,26 @@
 #define BATTLESTATE_H
 
 #include "State.h"
-#include "Player.h"
-#include "CharacterView.h"
-#include "CardView.h"
-#include "abilities/AllAbilities.h"
-#include <vector>  // <--- INDISPENSABLE pour std::vector
-#include <memory>  // <--- INDISPENSABLE pour std::unique_ptr
+#include "../models/Player.h"
+#include "../views/CharacterView.h"
+#include "../views/CardView.h"
+#include "../abilities/AllAbilities.h"
+#include <vector>  // <--- ESSENTIAL for std::vector
+#include <memory>  // <--- ESSENTIAL for std::unique_ptr
 
 class BattleState : public State {
 public:
-    // Enum interne pour le flux du combat
+    // Internal enum for battle flow
     enum class BattlePhase { InterTurn, WaitingForInput, TurnTransition, CombatEnd };
 
 private:
-    // Données du match
+    // Match data
     Player player1;
     Player player2;
     Player* activePlayer = nullptr;
     Player* inactivePlayer = nullptr;
 
-    sf::Texture backgroundTexture;
+    // sf::Texture backgroundTexture; // <-- Removed
     sf::Sprite backgroundSprite;
 
     std::unique_ptr<CharacterView> pyraView;
@@ -32,16 +32,15 @@ private:
     sf::Text promptText;
     sf::Text infoText;
     BattlePhase currentPhase;
-    sf::Font& font;
 
-    // Méthodes internes privées
+    // Private internal methods
     void initMatch();
     void updateHandViews();
     void centerText(sf::Text& text, float x, float y);
 
 public:
-    // --- CORRECTION CRITIQUE ICI ---
-    // On déclare que le constructeur accepte les équipes (std::vector)
+    // --- CRITICAL CORRECTION HERE ---
+    // We declare that the constructor accepts teams (std::vector)
     BattleState(GameController& game, std::vector<Character> p1Team, std::vector<Character> p2Team);
 
     void handleInput(GameController& game, sf::Event& event) override;

@@ -16,7 +16,6 @@ private:
     sf::RectangleShape sliderHandle;
     bool isDragging = false;
 
-    sf::Font& font;
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
 

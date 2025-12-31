@@ -1,6 +1,9 @@
-#include "../include/GameController.h"
+#include <SFML/Graphics.hpp>
+#include "../include/controllers/GameController.h"
+#include "core/ResourceManager.h"
 
-int main(){
+int main() {
+    // Game initialization and main loop
     GameController game;
     game.run();
 

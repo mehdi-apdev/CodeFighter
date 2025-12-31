@@ -10,18 +10,18 @@ private:
     sf::Text titleText;
     std::vector<sf::Text> menuOptions;
     int selectedOptionIndex = 0;
-    sf::Font& font; // Référence vers la police du jeu
-    sf::Texture backgroundTexture;
+    // sf::Font& font; // <-- Removed
+    // sf::Texture backgroundTexture; // <-- Removed
     sf::Sprite backgroundSprite;
 
 public:
-    MenuState(sf::Font& font, float width, float height); // Constructeur
+    MenuState(float width, float height); // Simplified constructor
 
     void handleInput(GameController& game, sf::Event& event) override;
     void update(GameController& game) override;
     void render(GameController& game, sf::RenderWindow& window) override;
 
-    // Helper pour centrer
+    // Helper to center
     void centerText(sf::Text& text, float x, float y);
 };
 

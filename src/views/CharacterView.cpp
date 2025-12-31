@@ -1,21 +1,18 @@
-#include "../../include/CharacterView.h"
+#include "../../include/views/CharacterView.h"
+#include "core/ResourceManager.h"
 #include <iostream>
 
 // Constructeur
-CharacterView::CharacterView(Character& model, const std::string& texturePath, sf::Font& font, float xPos, float yPos, float scale)
-    : model(model), font(font) {
+CharacterView::CharacterView(Character& model, const std::string& texturePath, float xPos, float yPos, float scale)
+    : model(model) {
 
-    // 1. Charger la Texture
-    if (!texture.loadFromFile(texturePath)) {
-        std::cerr << "Erreur: Impossible de charger la texture " << texturePath << " pour " << model.getName() << "!" << std::endl;
-        // Gérer l'erreur ou utiliser une texture par défaut
-    }
-    sprite.setTexture(texture);
+    // 1. Récupérer la Texture depuis le ResourceManager
+    sprite.setTexture(ResourceManager::getInstance().getTexture(texturePath));
     sprite.setPosition(xPos, yPos + 40.f); // Décaler l'image sous la barre de vie
     sprite.setScale(scale, scale);
 
-    // 2. Initialiser le Texte du Nom
-    nameText.setFont(font);
+    // 2. Initialiser le Texte du Nom avec la police du ResourceManager
+    nameText.setFont(ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF"));
     nameText.setString(model.getName());
     nameText.setCharacterSize(24);
     nameText.setFillColor(sf::Color::White);

@@ -2,11 +2,11 @@
 #define CARDVIEW_H
 
 #include <SFML/Graphics.hpp>
-#include "IAbility.h"
+#include "../abilities/IAbility.h"
 
 class CardView {
 private:
-    IAbility* ability; // Pointeur vers le Modèle (Command)
+    IAbility* ability; // Pointer to the Model (Command)
 
     sf::RectangleShape cardShape;
     sf::Text nameText;
@@ -16,17 +16,18 @@ private:
     bool isSelected = false;
 
 public:
-    CardView(IAbility* ability, sf::Font& font, float x, float y);
+    // Constructor no longer takes font
+    CardView(IAbility* ability, float x, float y);
 
-    // Dessin
+    // Drawing
     void draw(sf::RenderWindow& window);
 
     // Interaction (Controller -> View)
     bool isClicked(sf::Vector2i mousePos);
     void setPosition(float x, float y);
-    void highlight(bool active); // Change la couleur si sélectionnée
+    void highlight(bool active); // Changes color if selected
 
-    // Getter pour le Controller
+    // Getter for the Controller
     IAbility* getAbility() const { return ability; }
 };
 

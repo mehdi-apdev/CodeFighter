@@ -50,21 +50,25 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Extensions />
-		<Unit filename="include/BattleState.h" />
-		<Unit filename="include/CardView.h" />
-		<Unit filename="include/Character.h" />
-		<Unit filename="include/CharacterSelectionState.h" />
-		<Unit filename="include/CharacterView.h" />
-		<Unit filename="include/GameController.h" />
-		<Unit filename="include/IAbility.h" />
-		<Unit filename="include/MenuState.h" />
-		<Unit filename="include/OptionState.h" />
-		<Unit filename="include/Player.h" />
-		<Unit filename="include/State.h" />
 		<Unit filename="include/abilities/AllAbilities.h" />
+		<Unit filename="include/abilities/IAbility.h" />
 		<Unit filename="include/abilities/JavaException.h" />
 		<Unit filename="include/abilities/PythonStrike.h" />
+		<Unit filename="include/controllers/GameController.h" />
+		<Unit filename="include/core/ResourceManager.h" />
+		<Unit filename="include/models/Character.h" />
+		<Unit filename="include/models/Player.h" />
+		<Unit filename="include/states/BattleState.h" />
+		<Unit filename="include/states/CharacterSelectionState.h" />
+		<Unit filename="include/states/MenuState.h" />
+		<Unit filename="include/states/OptionState.h" />
+		<Unit filename="include/states/State.h" />
+		<Unit filename="include/views/CardView.h" />
+		<Unit filename="include/views/CharacterView.h" />
 		<Unit filename="src/controllers/GameController.cpp">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/core/ResourceManager.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/main.cpp">

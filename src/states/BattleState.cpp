@@ -107,6 +107,25 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
         return;
     }
 
+    // --- Dev Keys for testing Status Effects ---
+    if (event.type == sf::Event::KeyPressed) {
+        Character& targetCharacter = activePlayer->getActiveCharacter();
+        if (event.key.code == sf::Keyboard::P) {
+            // Apply POISON (3 turns, 10 dmg)
+            targetCharacter.addStatus({StatusType::POISON, 3, 10});
+            std::cout << " > [DEV] Applied POISON to " << targetCharacter.getName() << std::endl;
+        } else if (event.key.code == sf::Keyboard::B) {
+            // Apply BLOCK (1 turn, value 50 for 50 damage reduction)
+            targetCharacter.addStatus({StatusType::BLOCK, 1, 50});
+            std::cout << " > [DEV] Applied BLOCK to " << targetCharacter.getName() << std::endl;
+        } else if (event.key.code == sf::Keyboard::S) {
+            // Apply STUN (1 turn)
+            targetCharacter.addStatus({StatusType::STUN, 1, 0});
+            std::cout << " > [DEV] Applied STUN to " << targetCharacter.getName() << std::endl;
+        }
+    }
+    // --- End Dev Keys ---
+
     if (currentPhase == BattlePhase::InterTurn) {
         if (event.type == sf::Event::MouseButtonPressed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)) {
             currentPhase = BattlePhase::WaitingForInput;
@@ -114,6 +133,10 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
         }
     }
     else if (currentPhase == BattlePhase::WaitingForInput) {
+        if (activePlayer->getActiveCharacter().isStunned()) {
+            infoText.setString(activePlayer->getActiveCharacter().getName() + " is stunned and cannot act!");
+            return; // Prevent any further input processing for the stunned character
+        }
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(game.window);
 
@@ -168,6 +191,7 @@ void BattleState::update(GameController& game) {
         }
         else if (currentPhase == BattlePhase::TurnTransition) {
             std::swap(activePlayer, inactivePlayer);
+            activePlayer->getActiveCharacter().updateStatus(); // Update status for the new active player
             currentPhase = BattlePhase::InterTurn;
             updateHandViews();
         }

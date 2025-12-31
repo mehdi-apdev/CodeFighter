@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "../abilities/IAbility.h"
+#include "StatusEffect.h"
 
 class Character {
 private:
@@ -14,6 +15,7 @@ private:
     int maxHealth; // Added for tracking
     std::string description;
     int currentStamina; // Added for demo
+    std::vector<StatusEffect> statusEffects; // List of active status effects
 
 public:
     // Constructor
@@ -21,9 +23,13 @@ public:
 
     // Methods
     void useAbility();
-    void takeDmg(int damage);
+    void takeDamage(int amount); // Renamed from takeDmg
 
-    // Utility functions
+    // Status Effect Management
+    void addStatus(StatusEffect effect);
+    void updateStatus(); // Applies effects like poison, decrements durations
+    void applyDamageReduction(int& incomingDamage); // Checks for BLOCK/DEFENSE boosts
+    bool isStunned(); // Checks if STUN is active
     bool isAlive() const;
     void printStatus() const;
     const std::string& getName() const; // Simple Getter

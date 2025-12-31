@@ -58,6 +58,7 @@
 		<Unit filename="include/core/ResourceManager.h" />
 		<Unit filename="include/models/Character.h" />
 		<Unit filename="include/models/Player.h" />
+		<Unit filename="include/models/StatusEffect.h" />
 		<Unit filename="include/states/BattleState.h" />
 		<Unit filename="include/states/CharacterSelectionState.h" />
 		<Unit filename="include/states/MenuState.h" />

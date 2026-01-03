@@ -11,7 +11,7 @@ BattleState::BattleState(GameController& game, std::vector<Character> p1Team, st
 {
     // Player 1 setup
     for (const auto& c : p1Team) player1.addCharacter(c);
-    for(int i=0; i<10; ++i) player1.addToDeck(new PythonStrike());
+    for(int i=0; i<10; ++i) player1.addToDeck(new SelectTarget());
     player1.shuffleDeck();
     player1.initializeHand();
 
@@ -43,23 +43,50 @@ void BattleState::initMatch() {
     float javaX = (screenW * 0.80f) - (contentWidth / 2.f);
     float charY = screenH * 0.10f;
 
-    std::string p1Name = player1.getActiveCharacter().getName();
-    std::string p1Img = (p1Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
-    
+   std::string p1Name = player1.getActiveCharacter().getName();
+std::string p1Img;
+
+if (p1Name.find("Pyra") != std::string::npos) p1Img = "assets/images/pyra_python.png";
+else if (p1Name.find("Java") != std::string::npos) p1Img = "assets/images/java_tron.png";
+else if (p1Name.find("SQL") != std::string::npos) p1Img = "assets/images/Sql.png";
+else if (p1Name.find("CSS") != std::string::npos) p1Img = "assets/images/css.png";
+else if (p1Name.find("Bash") != std::string::npos) p1Img = "assets/images/bash.jpg";
+
+else if (p1Name.find("Go") != std::string::npos) p1Img = "assets/images/go.png";
+else if (p1Name.find("JavaScript") != std::string::npos) p1Img = "assets/images/javascript.png";
+else if (p1Name.find("PHP") != std::string::npos) p1Img = "assets/images/php.png";
+
+if (!p1Img.empty()) {
     pyraView = std::make_unique<CharacterView>(
         player1.getActiveCharacter(),
         p1Img, 
         pyraX, charY, 0.4f
     );
+}
+
+    
 
     std::string p2Name = player2.getActiveCharacter().getName();
-    std::string p2Img = (p2Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
+std::string p2Img;
 
+if (p2Name.find("Pyra") != std::string::npos) p2Img = "assets/images/pyra_python.png";
+else if (p2Name.find("Java") != std::string::npos) p2Img = "assets/images/java_tron.png";
+else if (p2Name.find("SQL") != std::string::npos) p2Img = "assets/images/Sql.png";
+else if (p2Name.find("CSS") != std::string::npos) p2Img = "assets/images/css.png";
+else if (p2Name.find("Bash") != std::string::npos) p2Img = "assets/images/bash.jpg";
+else if (p2Name.find("Go") != std::string::npos) p2Img = "assets/images/go.png";
+else if (p2Name.find("JavaScript") != std::string::npos) p2Img = "assets/images/javascript.png";
+else if (p2Name.find("PHP") != std::string::npos) p2Img = "assets/images/php.png";
+
+if (!p2Img.empty()) {
     javaTronView = std::make_unique<CharacterView>(
         player2.getActiveCharacter(),
         p2Img,
         javaX, charY, 0.4f
     );
+}
+
+   
 
     // UI Texts
     sf::Font& font = ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF");

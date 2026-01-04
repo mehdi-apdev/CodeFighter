@@ -37,12 +37,14 @@ MenuState::MenuState(float width, float height) {
     }
 }
 
+//Method used to center a specific text in the window
 void MenuState::centerText(sf::Text& text, float x, float y) {
     sf::FloatRect bounds = text.getLocalBounds();
     text.setOrigin(bounds.left + bounds.width / 2.0f, bounds.top + bounds.height / 2.0f);
     text.setPosition(x, y);
 }
 
+//Method used to manage the user's inputs
 void MenuState::handleInput(GameController& game, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up) {
@@ -70,6 +72,7 @@ void MenuState::handleInput(GameController& game, sf::Event& event) {
     }
 }
 
+//Method used to update all the graphical elements in the window
 void MenuState::update(GameController& game) {
     // Simple selection animation
     for (size_t i = 0; i < menuOptions.size(); ++i) {
@@ -83,6 +86,7 @@ void MenuState::update(GameController& game) {
     }
 }
 
+//Method used to draw the graphical elements in the windows
 void MenuState::render(GameController& game, sf::RenderWindow& window) {
     window.draw(backgroundSprite);
 

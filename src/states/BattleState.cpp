@@ -24,7 +24,7 @@ BattleState::BattleState(GameController& game, std::vector<Character> p1Team, st
                     player.addToDeck(new Undefined());
                 }
                 else if (name.find("Java") != std::string::npos) {
-                    player.addToDeck(new JavaException()); // Ou une classe JavaTron spécifique
+                    player.addToDeck(new JavaException()); 
                 }
                 else if (name.find("SQL") != std::string::npos) {
                     player.addToDeck(new SelectTarget());
@@ -130,6 +130,7 @@ if (!p2Img.empty()) {
     updateHandViews();
 }
 
+//Method used to update the cards graphically
 void BattleState::updateHandViews() {
     handViews.clear();
     selectedCard = nullptr;
@@ -155,6 +156,7 @@ void BattleState::updateHandViews() {
     }
 }
 
+//Method used to manage the user's inputs during the fight
 void BattleState::handleInput(GameController& game, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
         game.playMenuMusic();
@@ -224,10 +226,10 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
 void BattleState::update(GameController& game) {
     if (currentPhase != BattlePhase::CombatEnd) {
 
-        // Fonction locale pour déterminer l'image
+        // Local function to determine the assets
 auto getNextImgPath = [](const std::string& name) -> std::string {
     if (name.find("Pyra") != std::string::npos) return "assets/images/pyra_python.png";
-    if (name.find("JavaScript") != std::string::npos) return "assets/images/javascript.png"; // Attention: Vérifier avant Java
+    if (name.find("JavaScript") != std::string::npos) return "assets/images/javascript.png";
     if (name.find("Java") != std::string::npos) return "assets/images/java_tron.png";
     if (name.find("SQL") != std::string::npos) return "assets/images/Sql.png";
     if (name.find("CSS") != std::string::npos) return "assets/images/css.png";
@@ -296,6 +298,7 @@ else if (!player1.getActiveCharacter().isAlive()) {
     centerText(infoText, screenW / 2.0f, 1080.f - 250.f);
 }
 
+//Method used to draw the graphical elements on the screen
 void BattleState::render(GameController& game, sf::RenderWindow& window) {
     window.draw(backgroundSprite);
     pyraView->draw(window);
@@ -305,6 +308,7 @@ void BattleState::render(GameController& game, sf::RenderWindow& window) {
     window.draw(infoText);
 }
 
+//Method used to center a specific text in the window
 void BattleState::centerText(sf::Text& text, float x, float y) {
     sf::FloatRect bounds = text.getLocalBounds();
     text.setOrigin(bounds.left + bounds.width / 2.0f, bounds.top + bounds.height / 2.0f);

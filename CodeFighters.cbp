@@ -15,6 +15,7 @@
 					<Add option="-g" />
 					<Add directory="include" />
 					<Add directory="$(#sfml.include)" />
+					<Add directory="../../applications/SFML-2.5.1/include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
@@ -22,6 +23,7 @@
 					<Add library="sfml-system-d" />
 					<Add library="sfml-audio-d" />
 					<Add directory="$(#sfml.lib)" />
+					<Add directory="../../applications/SFML-2.5.1/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">

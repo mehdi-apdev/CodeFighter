@@ -9,18 +9,46 @@
 BattleState::BattleState(GameController& game, std::vector<Character> p1Team, std::vector<Character> p2Team)
     : currentPhase(BattlePhase::InterTurn)
 {
-    // Player 1 setup
-    for (const auto& c : p1Team) player1.addCharacter(c);
-    for(int i=0; i<10; ++i) player1.addToDeck(new PythonStrike());
-    player1.shuffleDeck();
-    player1.initializeHand();
+    //add characters to players and setup decks with a lambda to avoid code duplication
+    auto setupPlayerDeck = [](Player& player, const std::vector<Character>& team) {
+        for (const auto& c : team) {
+            player.addCharacter(c);
+            
+            std::string name = c.getName();
+            
+            for(int i = 0; i < 5; ++i) {
+                if (name.find("Pyra") != std::string::npos) {
+                    player.addToDeck(new PythonStrike()); 
+                } 
+                else if (name.find("JavaScript") != std::string::npos) {
+                    player.addToDeck(new Undefined());
+                }
+                else if (name.find("Java") != std::string::npos) {
+                    player.addToDeck(new JavaException()); // Ou une classe JavaTron spécifique
+                }
+                else if (name.find("SQL") != std::string::npos) {
+                    player.addToDeck(new SelectTarget());
+                }
+                else if (name.find("CSS") != std::string::npos) {
+                    player.addToDeck(new Flexbox());
+                }
+                else if (name.find("Bash") != std::string::npos) {
+                    player.addToDeck(new Pipe());
+                }
+                else if (name.find("Go") != std::string::npos) {
+                    player.addToDeck(new Goroutine());
+                }
+                else if (name.find("PHP") != std::string::npos) {
+                    player.addToDeck(new IncludeOnce());
+                }
+            }
+        }
+        player.shuffleDeck();
+        player.initializeHand();
+    };
 
-    // Player 2 setup
-    for (const auto& c : p2Team) player2.addCharacter(c);
-    for(int i=0; i<10; ++i) player2.addToDeck(new JavaException());
-    player2.shuffleDeck();
-    player2.initializeHand();
-
+    setupPlayerDeck(player1, p1Team);
+    setupPlayerDeck(player2, p2Team);
     game.playBattleMusic();
     initMatch();
 }
@@ -43,23 +71,50 @@ void BattleState::initMatch() {
     float javaX = (screenW * 0.80f) - (contentWidth / 2.f);
     float charY = screenH * 0.10f;
 
-    std::string p1Name = player1.getActiveCharacter().getName();
-    std::string p1Img = (p1Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
-    
+   std::string p1Name = player1.getActiveCharacter().getName();
+std::string p1Img;
+
+if (p1Name.find("Pyra") != std::string::npos) p1Img = "assets/images/pyra_python.png";
+else if (p1Name.find("Java") != std::string::npos) p1Img = "assets/images/java_tron.png";
+else if (p1Name.find("SQL") != std::string::npos) p1Img = "assets/images/Sql.png";
+else if (p1Name.find("CSS") != std::string::npos) p1Img = "assets/images/css.png";
+else if (p1Name.find("Bash") != std::string::npos) p1Img = "assets/images/bash.jpg";
+
+else if (p1Name.find("Go") != std::string::npos) p1Img = "assets/images/go.png";
+else if (p1Name.find("JavaScript") != std::string::npos) p1Img = "assets/images/javascript.png";
+else if (p1Name.find("PHP") != std::string::npos) p1Img = "assets/images/php.png";
+
+if (!p1Img.empty()) {
     pyraView = std::make_unique<CharacterView>(
         player1.getActiveCharacter(),
         p1Img, 
         pyraX, charY, 0.4f
     );
+}
+
+    
 
     std::string p2Name = player2.getActiveCharacter().getName();
-    std::string p2Img = (p2Name.find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
+std::string p2Img;
 
+if (p2Name.find("Pyra") != std::string::npos) p2Img = "assets/images/pyra_python.png";
+else if (p2Name.find("Java") != std::string::npos) p2Img = "assets/images/java_tron.png";
+else if (p2Name.find("SQL") != std::string::npos) p2Img = "assets/images/Sql.png";
+else if (p2Name.find("CSS") != std::string::npos) p2Img = "assets/images/css.png";
+else if (p2Name.find("Bash") != std::string::npos) p2Img = "assets/images/bash.jpg";
+else if (p2Name.find("Go") != std::string::npos) p2Img = "assets/images/go.png";
+else if (p2Name.find("JavaScript") != std::string::npos) p2Img = "assets/images/javascript.png";
+else if (p2Name.find("PHP") != std::string::npos) p2Img = "assets/images/php.png";
+
+if (!p2Img.empty()) {
     javaTronView = std::make_unique<CharacterView>(
         player2.getActiveCharacter(),
         p2Img,
         javaX, charY, 0.4f
     );
+}
+
+   
 
     // UI Texts
     sf::Font& font = ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF");
@@ -169,26 +224,39 @@ void BattleState::handleInput(GameController& game, sf::Event& event) {
 void BattleState::update(GameController& game) {
     if (currentPhase != BattlePhase::CombatEnd) {
 
-        if (!player2.getActiveCharacter().isAlive()) {
-            if (player2.switchToNextCharacter()) {
-                infoText.setString("Character KO! Next one arrives!");
-                std::string nextImg = (player2.getActiveCharacter().getName().find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
-                javaTronView = std::make_unique<CharacterView>(player2.getActiveCharacter(), nextImg, 1360.f, 108.f, 0.4f);
-            } else {
-                currentPhase = BattlePhase::CombatEnd;
-                handViews.clear();
-            }
-        }
-        else if (!player1.getActiveCharacter().isAlive()) {
-            if (player1.switchToNextCharacter()) {
-                infoText.setString("Character KO! Reinforcements!");
-                std::string nextImg = (player1.getActiveCharacter().getName().find("Pyra") != std::string::npos) ? "assets/images/pyra_python.png" : "assets/images/java_tron.png";
-                pyraView = std::make_unique<CharacterView>(player1.getActiveCharacter(), nextImg, 210.f, 108.f, 0.4f);
-            } else {
-                currentPhase = BattlePhase::CombatEnd;
-                handViews.clear();
-            }
-        }
+        // Fonction locale pour déterminer l'image
+auto getNextImgPath = [](const std::string& name) -> std::string {
+    if (name.find("Pyra") != std::string::npos) return "assets/images/pyra_python.png";
+    if (name.find("JavaScript") != std::string::npos) return "assets/images/javascript.png"; // Attention: Vérifier avant Java
+    if (name.find("Java") != std::string::npos) return "assets/images/java_tron.png";
+    if (name.find("SQL") != std::string::npos) return "assets/images/Sql.png";
+    if (name.find("CSS") != std::string::npos) return "assets/images/css.png";
+    if (name.find("Bash") != std::string::npos) return "assets/images/bash.png";
+    if (name.find("Go") != std::string::npos) return "assets/images/go.png";
+    if (name.find("PHP") != std::string::npos) return "assets/images/php.png";
+    return "assets/images/java_tron.png"; // Image par défaut
+};
+
+if (!player2.getActiveCharacter().isAlive()) {
+    if (player2.switchToNextCharacter()) {
+        infoText.setString("Character KO! Next one arrives!");
+        std::string nextImg = getNextImgPath(player2.getActiveCharacter().getName());
+        javaTronView = std::make_unique<CharacterView>(player2.getActiveCharacter(), nextImg, 1360.f, 108.f, 0.4f);
+    } else {
+        currentPhase = BattlePhase::CombatEnd;
+        handViews.clear();
+    }
+}
+else if (!player1.getActiveCharacter().isAlive()) {
+    if (player1.switchToNextCharacter()) {
+        infoText.setString("Character KO! Reinforcements!");
+        std::string nextImg = getNextImgPath(player1.getActiveCharacter().getName());
+        pyraView = std::make_unique<CharacterView>(player1.getActiveCharacter(), nextImg, 210.f, 108.f, 0.4f);
+    } else {
+        currentPhase = BattlePhase::CombatEnd;
+        handViews.clear();
+    }
+}
         else if (currentPhase == BattlePhase::TurnTransition) {
             std::swap(activePlayer, inactivePlayer);
             activePlayer->getActiveCharacter().updateStatus(); // Update status for the new active player

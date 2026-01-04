@@ -15,12 +15,14 @@ CharacterSelectionState::CharacterSelectionState(GameController& game)
 
 // --- PRIVATE METHODS ---
 void CharacterSelectionState::initRoster() {
-    availableCharacters.emplace_back(1, "Pyra (Core)", 100, "The main engine.");
-    availableCharacters.emplace_back(2, "Pyra (Venv)", 80, "The virtual environment.");
-    availableCharacters.emplace_back(3, "Pyra (GIL)", 120, "The Global Interpreter Lock.");
-    availableCharacters.emplace_back(4, "Java (JVM)", 90, "The virtual machine.");
-    availableCharacters.emplace_back(5, "Java (GC)", 100, "The Garbage Collector.");
-    availableCharacters.emplace_back(6, "Java (JIT)", 70, "The Just-In-Time compiler.");
+    availableCharacters.emplace_back(1, "Pyra", 100, "La Flamme Python"); 
+    availableCharacters.emplace_back(2, "Java ", 100, "The Garbage Collector.");
+    availableCharacters.emplace_back(3, "SQL", 110, "La Souveraine des Bases"); 
+    availableCharacters.emplace_back(4, "CSS", 90, "L'Artiste du Frontend"); 
+    availableCharacters.emplace_back(5, "Bash", 100, "Le Scripteur Infaillible");  
+    availableCharacters.emplace_back(6, "Go", 100, "Le Garbage Collector"); 
+    availableCharacters.emplace_back(7, "JavaScript", 80, "Le Farfadet Malicieux"); 
+    availableCharacters.emplace_back(8, "PHP", 110, "Le Scripteur du Serveur"); 
 }
 
 // --- loadAssets method is removed ---
@@ -92,10 +94,23 @@ void CharacterSelectionState::initUI(float width, float height) {
 
         // Sprite from ResourceManager
         std::string name = availableCharacters[i].getName();
+
         if (name.find("Pyra") != std::string::npos) {
             c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/pyra_python.png"));
-        } else {
+        } else if (name.find("JavaScript") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/javascript.png"));
+        } else if (name.find("Java") != std::string::npos) {
             c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/java_tron.png"));
+        } else if (name.find("SQL") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/Sql.png"));
+        } else if (name.find("CSS") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/css.png"));
+        } else if (name.find("Bash") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/bash.jpg"));
+        } else if (name.find("Go") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/go.png"));
+        } else if (name.find("PHP") != std::string::npos) {
+            c.sprite.setTexture(ResourceManager::getInstance().getTexture("assets/images/php.png"));
         }
 
         sf::Vector2u ts = c.sprite.getTexture()->getSize();

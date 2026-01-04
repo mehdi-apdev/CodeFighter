@@ -15,6 +15,7 @@
 					<Add option="-g" />
 					<Add directory="include" />
 					<Add directory="$(#sfml.include)" />
+					<Add directory="../../applications/SFML-2.5.1/include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
@@ -22,6 +23,7 @@
 					<Add library="sfml-system-d" />
 					<Add library="sfml-audio-d" />
 					<Add directory="$(#sfml.lib)" />
+					<Add directory="../../applications/SFML-2.5.1/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -51,9 +53,15 @@
 		</Compiler>
 		<Extensions />
 		<Unit filename="include/abilities/AllAbilities.h" />
+		<Unit filename="include/abilities/Flexbox.h" />
+		<Unit filename="include/abilities/GoRoutine.h" />
 		<Unit filename="include/abilities/IAbility.h" />
+		<Unit filename="include/abilities/IncludeOnce.h" />
 		<Unit filename="include/abilities/JavaException.h" />
+		<Unit filename="include/abilities/Pipe.h" />
 		<Unit filename="include/abilities/PythonStrike.h" />
+		<Unit filename="include/abilities/SelectTarget.h" />
+		<Unit filename="include/abilities/Undefined.h" />
 		<Unit filename="include/controllers/GameController.h" />
 		<Unit filename="include/core/ResourceManager.h" />
 		<Unit filename="include/models/Character.h" />

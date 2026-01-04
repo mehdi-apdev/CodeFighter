@@ -3,14 +3,14 @@
 #include <random>
 #include <stdexcept> // Required to handle errors if the list is empty
 
-// Constructeur
+// Constructor
 // MODIFICATION: Initialization of the active character index to 0
 Player::Player() : endurance(30), activeCharacterIndex(0) {
     // The hand will be initialized with initializeHand()
     characters.reserve(3); // Reserve space for 3 characters
 }
 
-// Destructeur
+// Destructor
 Player::~Player() {
     // Freeing memory of deck cards
     for (IAbility* card : deck) {
@@ -23,17 +23,19 @@ Player::~Player() {
     }
 }
 
-// Méthodes pour gérer le deck
+// Methods to add a new Ability to the deck
 void Player::addToDeck(IAbility* ability) {
     deck.push_back(ability);
 }
 
+//Method to shuffle the deck of the Player
 void Player::shuffleDeck() {
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(deck.begin(), deck.end(), g);
 }
 
+//Method used to pick a card in the deck
 IAbility* Player::drawCard() {
     if (deck.empty()) {
         return nullptr;
@@ -43,13 +45,14 @@ IAbility* Player::drawCard() {
     return card;
 }
 
-// Méthodes pour gérer la main
+// Method used to add a card to the player's hand
 void Player::addToHand(IAbility* card) {
     if (card != nullptr) {
         hand.push_back(card);
     }
 }
 
+//Method used to play a card from the hand
 void Player::playCard(int index) {
     if (index >= 0 && index < static_cast<int>(hand.size())) {
         // Here you will need to implement the logic to play the card
@@ -58,6 +61,7 @@ void Player::playCard(int index) {
     }
 }
 
+//Method used to discard a card from the hand
 void Player::discardCard(int index) {
     if (index >= 0 && index < static_cast<int>(hand.size())) {
         delete hand[index]; // Frees memory
@@ -65,7 +69,7 @@ void Player::discardCard(int index) {
     }
 }
 
-// Méthodes pour gérer les personnages
+// Methods to manage the Characters
 void Player::addCharacter(const Character& character) {
     if (characters.size() < 3) {
         characters.push_back(character);
@@ -75,8 +79,6 @@ void Player::addCharacter(const Character& character) {
 Character& Player::getCharacter(int index) {
     return characters[index];
 }
-
-// --- AJOUTS POUR LE SYSTÈME DE COMBAT (TAG TEAM) ---
 
 Character& Player::getActiveCharacter() {
     if (characters.empty()) {
@@ -93,10 +95,10 @@ Character& Player::getActiveCharacter() {
 }
 
 bool Player::switchToNextCharacter() {
-    // Vérifie s'il reste un personnage APRÈS celui-ci dans la liste
+    // Verify if there is a character AFTER him in the list
     if (activeCharacterIndex < static_cast<int>(characters.size()) - 1) {
         activeCharacterIndex++;
-        return true; // Le changement a réussi, un nouveau perso arrive
+        return true; 
     }
     return false; // Failure: It was the last character, the player lost
 }
@@ -107,7 +109,7 @@ const std::vector<Character>& Player::getCharacters() const {
     return characters;
 }
 
-// Méthodes pour gérer l'endurance
+// Methods to manage the stamina
 void Player::setEndurance(int value) {
     endurance = value;
 }
@@ -138,7 +140,7 @@ size_t Player::getDeckSize() const {
     return deck.size();
 }
 
-// Méthodes utilitaires
+// Utils methods
 void Player::initializeHand() {
     for (int i = 0; i < 7 && !deck.empty(); ++i) {
         IAbility* card = drawCard();

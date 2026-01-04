@@ -1,10 +1,12 @@
 #include "core/ResourceManager.h" // Corrected include path
 
+//Method to access the RessourceManager
 ResourceManager& ResourceManager::getInstance() {
     static ResourceManager instance;
     return instance;
 }
 
+//Method to get a texture with a specific path
 sf::Texture& ResourceManager::getTexture(const std::string& path) {
     if (m_textures.find(path) == m_textures.end()) {
         sf::Texture texture;
@@ -18,6 +20,7 @@ sf::Texture& ResourceManager::getTexture(const std::string& path) {
     return m_textures.at(path);
 }
 
+//Method to get a font with a specific path
 sf::Font& ResourceManager::getFont(const std::string& path) {
     if (m_fonts.find(path) == m_fonts.end()) {
         sf::Font font;

@@ -275,6 +275,7 @@ void CharacterSelectionState::update(GameController& game) {
     }
 }
 
+//Method used to draw the graphical elements in the window
 void CharacterSelectionState::render(GameController& game, sf::RenderWindow& window) {
     window.draw(backgroundSprite);
     window.draw(titleText);

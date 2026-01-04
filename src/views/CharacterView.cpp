@@ -2,40 +2,40 @@
 #include "core/ResourceManager.h"
 #include <iostream>
 
-// Constructeur
+// Constructor
 CharacterView::CharacterView(Character& model, const std::string& texturePath, float xPos, float yPos, float scale)
     : model(model) {
 
-    // 1. Récupérer la Texture depuis le ResourceManager
+    // 1. Get the texture from the ressource manager
     sprite.setTexture(ResourceManager::getInstance().getTexture(texturePath));
     sprite.setPosition(xPos, yPos + 40.f); // Décaler l'image sous la barre de vie
     sprite.setScale(scale, scale);
 
-    // 2. Initialiser le Texte du Nom avec la police du ResourceManager
+    // 2. Initialize the name's text with the font from the ressource manager
     nameText.setFont(ResourceManager::getInstance().getFont("assets/fonts/ARIAL.TTF"));
     nameText.setString(model.getName());
     nameText.setCharacterSize(24);
     nameText.setFillColor(sf::Color::White);
-    nameText.setPosition(xPos, yPos - 30.f); // Au-dessus de la barre de vie
+    nameText.setPosition(xPos, yPos - 30.f); // Above the health bar
 }
 
-// Méthode pour dessiner la barre de vie
+// Method used to draw the health bar for a Character
 void CharacterView::drawHealthBar(sf::RenderWindow& window, float x, float y) {
     int currentHealth = model.getHealth();
     int maxHealth = model.getMaxHealth();
 
-    // Fond (gris/noir)
+    // Background (Grey, Black)
     sf::RectangleShape background(sf::Vector2f(barWidth, barHeight));
     background.setPosition(x, y);
     background.setFillColor(sf::Color(50, 50, 50));
     window.draw(background);
 
-    // Vie restante
+    // Remainig health
     float healthRatio = (float)currentHealth / maxHealth;
     sf::RectangleShape foreground(sf::Vector2f(barWidth * healthRatio, barHeight));
     foreground.setPosition(x, y);
 
-    // Couleur
+    // Colour
     if (healthRatio > 0.5f) {
         foreground.setFillColor(sf::Color::Green);
     } else if (healthRatio > 0.2f) {
@@ -47,14 +47,14 @@ void CharacterView::drawHealthBar(sf::RenderWindow& window, float x, float y) {
     window.draw(foreground);
 }
 
-// Méthode principale de dessin
+// Method used to draw the CharacterView in the window
 void CharacterView::draw(sf::RenderWindow& window) {
-    // Dessiner le nom
+    // Draw the name
     window.draw(nameText);
 
-    // Dessiner la barre de vie (la barre de vie est positionnée à l'endroit du sprite, ajustée)
+    // Draw the health bar
     drawHealthBar(window, nameText.getPosition().x, nameText.getPosition().y + 30.f);
 
-    // Dessiner le sprite
+    // Draw the sprite
     window.draw(sprite);
 }

@@ -52,12 +52,14 @@ OptionState::OptionState(GameController& game) {
     centerText(backText, 1920 / 2, 850);
 }
 
+//Method used to center a specific text in the window
 void OptionState::centerText(sf::Text& text, float x, float y) {
     sf::FloatRect bounds = text.getLocalBounds();
     text.setOrigin(bounds.left + bounds.width / 2.0f, bounds.top + bounds.height / 2.0f);
     text.setPosition(x, y);
 }
 
+//Method used to handle the user's inputs
 void OptionState::handleInput(GameController& game, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
         // Back to menu
@@ -76,6 +78,7 @@ void OptionState::handleInput(GameController& game, sf::Event& event) {
     }
 }
 
+//Method used to update the graphical elements in the window
 void OptionState::update(GameController& game) {
     if (isDragging) {
         sf::Vector2i pixelPos = sf::Mouse::getPosition(game.window);
@@ -100,6 +103,7 @@ void OptionState::update(GameController& game) {
     }
 }
 
+//Method used to draw the graphical elements in the window
 void OptionState::render(GameController& game, sf::RenderWindow& window) {
     window.draw(backgroundSprite);
     window.draw(titleText);
